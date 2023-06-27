@@ -1,3 +1,40 @@
-<!DOCTYPE html>
-
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="./style.css" />
+</head>
+<body>
+    <header>
+        <h1>Search Artist API</h1>
+    </header>
+    <div class="form-input" id="container">
+        <div class="row border border-black mx-auto px-4">
+            <label>
+                <span class="sr-only">Search</span>
+                <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+                <svg class="h-5 w-10 fill-slate-300" viewBox="0 0 20 20"><!-- ... --></svg>
+                </span>
+                <input class="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="Search for an Artist" type="text" name="search"/>
+                <button class="rounded-full ...">Search</button>
+            </label>
+            <div id="calendar-form">
+                <p>Select a date to find local events in your area</p>
+                <div id="calendar"></div>
+                <label>
+                    <span class="sr-only">Search</span>
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <svg class="h-5 w-10 fill-slate-300" viewBox="0 0 20 20"><!-- ... --></svg>
+                    </span>
+                    <input class="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="Please enter your Zipcode, City or State" type="text" name="search"/>
+                    <button class="rounded-full ...">Search</button>
+                </label>
+            </div>
+        </div>
+    </div>
+    <script src="./homepage.js"></script>
+</body>
 </html>
