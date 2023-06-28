@@ -6,47 +6,74 @@
   <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4.5.1/css/metro-all.min.css">
   <link href="/dist/output.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
-  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="./style.css" />
 </head>
 
 <body>
-    <section class="container" id="searchAside">
-        <div class="searchPageBar">
-            <label>Artist Name: </label>
-            <br>
-            <input type="text" placeholder="i.e. Prince, Bach, The Beatles... ">
+    <div class="row">
+        <div class="column side">
+            <section class="container" id="searchAside">
+                <div class="container" id="artist-search">
+                    <div class="card p-3">
+                        <form>
+                            <label>Find an Artist's Music, Tour Dates, and Similar Artists</label>
+                            <input type="text" placeholder="Search Artist" data-role="input" data-search-button="true" id="search-artist-input">
+                        </form>
+                        <form class="block" id="event-search">
+                            <label>Pick a Date Range and Location</label>
+                            <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="start-date"> to <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="end-date">
+                            <input type="text" placeholder="Zipcode or City, State" id="location-input">
+                            <button class="button shadowed" id="event-search-btn">Find Events in my area</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
         </div>
-        <div class="calendar">
-            <div data-role="calendar" data-multi-select="false"></div>
+    <div class="column main">
+            <section class="container" id="resultsSection">
+                <div id="resultsSummary">
+                    <h1>Results for <span id="userSearchInput"></span></h1>
+                    <h2>Artist Bio</h2>
+                    <div class="results" id="artistBio">
+                    </div>
+                    <h2>Concerts Nearby</h2>
+                    <div class="results" id="nearbyConcerts">
+                        <ul id="concertList"></ul>
+                    </div>
+                    <h2>Sample Playlist</h2>
+                    <div class="results" id="samplePlaylist">
+                        <div data-role="tile" data-size="medium" class="playlistTile bg-gray">
+                            <img class="tileImg" id="playlistImg" src="">
+                        </div>
+                        <ul id="songSampleList"></ul>
+                    </div>
+                    <h2>Similar Artists</h2>
+                    <div class="results" id="similarArtists">
+                        <div data-role="tile" data-effect="hover-slide-down" data-size="medium" class="artistTile bg-red id="artistTile1">
+                            <img class="tileImg slide-front" id="tileImg1" src="">
+                            <h5 class="artistName slide-back" id="artistName1">Test1</h5>
+                        </div>
+                        <div data-role="tile" data-effect="hover-slide-down" data-size="medium" class="artistTile bg-blue" id="artistTile2">
+                            <img class="tileImg slide-front" id="tileImg2" src="">
+                            <h5 class="artistName slide-back" id="artistName2">Test2</h5>
+                        </div>
+                        <div data-role="tile" data-effect="hover-slide-down" data-size="medium" class="artistTile bg-yellow" id="artistTile3">
+                            <img class="tileImg slide-front" id="tileImg3" src="">
+                            <h5 class="artistName slide-back" id="artistName3">Test3</h5>
+                        </div>
+                        <div data-role="tile" data-effect="hover-slide-down" data-size="medium" class="artistTile bg-indigo" id="artistTile4">
+                            <img class="tileImg slide-front" id="tileImg4" src="">
+                            <h5 class="artistName slide-back" id="artistName4">Test4</h5>
+                        </div>
+                        <div data-role="tile" data-effect="hover-slide-down" data-size="medium" class="artistTile bg-green" id="artistTile5">
+                            <img class="tileImg slide-front" id="tileImg5" src="">
+                            <h5 class="artistName slide-back" id="artistName5">Test5</h5>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
-        <button type="submit" class="submitBtn" id="searchSubmitBtn">Search</button>
-    </section>
-    <section class="container" id="resultsSection">
-        <div id="resultsSummary">
-            <h1>Results for <span id="userSearchInput"></span></h1>
-            <div class="results" id="artistBio">
-                <h2>Artist Bio</h2>
-            </div>
-            <div class="results" id="nearbyConcerts">
-                <h2>Concerts Nearby</h2>
-                <ul id="concertList"></ul>
-            </div>
-            <div class="results" id="samplePlaylist">
-                <h2>Sample Playlist</h2>
-                <div data-role="tile" data-size="medium" class="playlistTile bg-gray"></div>
-                <ul id="songSampleList"></ul>
-            </div>
-            <div class="results" id="similarArtists">
-                <h2>Similar Artists</h2>
-                <div data-role="tile" data-size="medium" class="artistTile bg-red" id="artistTile1"></div>
-                <div data-role="tile" data-size="medium" class="artistTile bg-blue" id="artistTile2"></div>
-                <div data-role="tile" data-size="medium" class="artistTile bg-yellow" id="artistTile3"></div>
-                <div data-role="tile" data-size="medium" class="artistTile bg-indigo" id="artistTile4"></div>
-                <div data-role="tile" data-size="medium" class="artistTile bg-green" id="artistTile5"></div>
-            </div>
-        </div>
-    </section>
+    </div>
     
 
     <script src="https://cdn.korzh.com/metroui/v4.5.1/js/metro.min.js"></script>
