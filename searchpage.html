@@ -11,34 +11,41 @@
 </head>
 
 <body>
-    <header>
-        <h1>Results for <span id="userSearchInput"></span></h1>
-    </header>
     <section class="container" id="searchAside">
         <div class="searchPageBar">
-            
+            <label>Artist Name: </label>
+            <br>
+            <input type="text" placeholder="i.e. Prince, Bach, The Beatles... ">
         </div>
         <div class="calendar">
             <div data-role="calendar" data-multi-select="false"></div>
         </div>
+        <button type="submit" class="submitBtn" id="searchSubmitBtn">Search</button>
     </section>
     <section class="container" id="resultsSection">
         <div id="resultsSummary">
-            <h1>Results</h1>
+            <h1>Results for <span id="userSearchInput"></span></h1>
             <div class="results" id="artistBio">
                 <h2>Artist Bio</h2>
             </div>
             <div class="results" id="nearbyConcerts">
-                <h2>Concerts Nearby <span id="userCalendarInput"></span></h2>
+                <h2>Concerts Nearby</h2>
+                <ul id="concertList"></ul>
             </div>
             <div class="results" id="samplePlaylist">
-                <h2>Sample Playlist Here</h2>
+                <h2>Sample Playlist</h2>
+                <div data-role="tile" data-size="medium" class="playlistTile bg-gray"></div>
+                <ul id="songSampleList"></ul>
             </div>
             <div class="results" id="similarArtists">
                 <h2>Similar Artists</h2>
+                <div data-role="tile" data-size="medium" class="artistTile bg-red" id="artistTile1"></div>
+                <div data-role="tile" data-size="medium" class="artistTile bg-blue" id="artistTile2"></div>
+                <div data-role="tile" data-size="medium" class="artistTile bg-yellow" id="artistTile3"></div>
+                <div data-role="tile" data-size="medium" class="artistTile bg-indigo" id="artistTile4"></div>
+                <div data-role="tile" data-size="medium" class="artistTile bg-green" id="artistTile5"></div>
             </div>
         </div>
-
     </section>
     
 
