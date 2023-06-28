@@ -1,2 +1,12 @@
+var ArtistName = document.querySelector("#Artist-name");
+var searchbutton = document.querySelector("#searchsubmitbutton")
 
-test
+
+
+    var user = {
+      ArtistName: ArtistName
+      
+    };
+ 
+    localStorage.setItem("user", JSON.stringify(user));
+    
