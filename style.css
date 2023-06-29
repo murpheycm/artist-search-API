@@ -1,4 +1,15 @@
+/* Styling the searchpage.html columns and tiles*/
+.column.side {
+    width: 25%;
+}
+.column.main {
+    width:75%
+}
 
-test {
-    
+#similarArtists {
+    display: flex;
+    text-align: center;
+}
+.artistTile {
+    margin-right: 15px
 }
