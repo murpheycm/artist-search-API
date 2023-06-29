@@ -1,12 +1,9 @@
-var ArtistName = document.querySelector("#Artist-name");
+var ArtistName = document.querySelector("#searchPageBar");
 var searchbutton = document.querySelector("#searchsubmitbutton")
 
-
-
+function handleEventSearch(event) {
     var user = {
-      ArtistName: ArtistName
-      
-    };
- 
+      ArtistName: Artist-Name
+    }
     localStorage.setItem("user", JSON.stringify(user));
-    
+  };
