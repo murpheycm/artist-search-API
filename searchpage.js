@@ -6,6 +6,7 @@ const options = {
 		'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
 	}
 };
+const searchPageUrl = document.location;
 var eventSearchBtn = document.querySelector('#event-search-btn');
 var artistSearchForm = document.querySelector('#search-artist-input');
 var locationEl = document.getElementById('#location-input');
@@ -49,7 +50,7 @@ function handleEventSearch(event) {
     event.preventDefault();
   
     var eventSearch = {
-      location: locationEl.value,
+      searchLocation: locationEl.value,
       startDate: startDateEl.value,
       endDate: endDateEl.value
     };
@@ -91,3 +92,27 @@ if (artistSearchForm) {
   artistSearchForm.addEventListener('submit', handleArtistSearch);
   console.log(artistSearchForm);
 }
+
+function getParams() {
+    console.log(document.location)
+    if (searchPageUrl.includes('artist')) {
+        var artistSearch = document.location.search.split('=');
+        console.log(artistSearch);
+
+        handleArtistSearchEvent(artistSearch);
+    } else if (searchPageUrl.includes('searchlocation')) {
+        var eventSearch = document.location.search.split('&');
+
+        var searchLocation = eventSearch[0].split('=').pop();
+        var startDate = eventSearch[1].split('=').pop();
+        var endDate = eventSearch[2].split('=').pop();
+        console.log(eventSearch);
+
+        handleEventSearch(eventSearch);
+    } else {
+        return;
+    }
+    
+}
+
+getParams();
