@@ -27,6 +27,7 @@ function retrieveArtistInfo(artistSearchEl) {
     // }
 
     var artistName = data.list[0].artist.name;
+    var artistID = data.list[0].artist.id;
 
     if (artistSearchEl !== artistName) {
         console.log('artist search error');
