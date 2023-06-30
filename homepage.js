@@ -20,7 +20,7 @@ function handleEventSearch(event) {
           return;
         }
       
-        var queryString = './searchpage.html?location=' + searchLocation + '&startdate=' + startDate + '&enddate=' + endDate;
+        var queryString = './searchpage.html?searchlocation=' + searchLocation + '&startdate=' + startDate + '&enddate=' + endDate;
       
       location.assign(queryString);
       locationEl.value = "";
