@@ -49,39 +49,51 @@ function retrieveArtistInfo(artistSearchEl) {
 // Event handler for searchbar function
 function handleEventSearch(event) {
     event.preventDefault();
-  
+
     var eventSearch = {
-      searchLocation: locationEl.value,
-      startDate: startDateEl.value,
-      endDate: endDateEl.value
+        searchLocation: locationEl.value,
+        startDate: startDateEl.value,
+        endDate: endDateEl.value
     };
+    saveEventHistory(eventSearch);
+
+    locationEl.value = "";
+    startDateEl.value = "";
+    endDateEl.value = "";
+
+    return false;
+
+function handleArtistSearch(event) {
+
+    event.preventDefault();
   
+    var artistSearch = artistSearchEl.value;
+    
+    saveArtistHistory(artistSearch);
+    retrieveArtistId(artistSearch);
+    
+    artistSearchEl.value = "";
+  
+    return false;
+}
+
+function saveEventHistory() {
     var eventSearches = JSON.parse(localStorage.getItem('eventSearches')) || [];
     eventSearches.push(eventSearch);
     localStorage.setItem('eventSearches', JSON.stringify(eventSearches));
     console.log(eventSearches);
-  
-    locationEl.value = "";
-    startDateEl.value = "";
-    endDateEl.value = "";
-  
-    return false;
-  }
-  
-  //
-  function handleArtistSearch(event) {
-    event.preventDefault();
-  
-    var artistSearch = artistSearchEl.value;
+}
+
+function saveArtistHistory() {
     var artistSearches = JSON.parse(localStorage.getItem('artistSearches')) || [];
     artistSearches.push(artistSearch);
     localStorage.setItem('artistSearches', JSON.stringify(artistSearches));
     console.log(artistSearches);
-    // retrieveArtistId(artistSearch);
-    artistSearchEl.value = "";
-  
-    return false;
-  }
+    retrieveArtistId(artistSearch);
+
+}
+
+
   
 //Event listener for search button
 if (eventSearchBtn) {
@@ -100,7 +112,7 @@ function getParams() {
         var artistSearch = document.location.search.split('=');
         console.log(artistSearch);
 
-        handleArtistSearchEvent(artistSearch);
+        saveArtistHistory(artistSearch);
     } else if (searchPageUrl.includes('searchlocation')) {
         var eventSearch = document.location.search.split('&');
 
@@ -109,7 +121,7 @@ function getParams() {
         var endDate = eventSearch[2].split('=').pop();
         console.log(eventSearch);
 
-        handleEventSearch(eventSearch);
+        saveEventHistory(eventSearch);
     } else {
         return;
     }
