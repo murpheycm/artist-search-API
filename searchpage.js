@@ -1,4 +1,4 @@
-const artistSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + artistSearch;
+const artistSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + artistSearchEl;
 const options = {
 	method: 'GET',
 	headers: {
@@ -7,33 +7,44 @@ const options = {
 	}
 };
 var eventSearchBtn = document.querySelector('#event-search-btn');
-var artistSearchForm = document.querySelector('#artist-search form');
-var locationEl = document.getElementById('location-input');
-var endDateEl = document.getElementById('end-date');
-var startDateEl = document.getElementById('start-date');
-var artistSearchEl = document.getElementById('search-artist-input');
+var artistSearchForm = document.querySelector('#search-artist-input');
+var locationEl = document.getElementById('#location-input');
+var endDateEl = document.getElementById('#end-date');
+var startDateEl = document.getElementById('#start-date');
+var artistSearchEl = document.getElementById('#search-artist-input');
 
-function retrieveArtistInfo(artistSearch) {
-    try {
+// Function to retrieve artist information
+function retrieveArtistInfo(artistSearchEl) {
+    async function logData() {
         const response = await fetch(artistSearchUrl, options);
-        const result = await response.text();
+        // const result = await response.text();
+        const result = await response.json();
         console.log(result);
-    } catch (error) {
-        console.error(error);
-    }
+    };
+    // catch (error) {
+    //     console.error(error);
+    // }
 
     var artistName = data.list[0].artist.name;
 
-    if (artistSearch !== artistName) {
+    if (artistSearchEl !== artistName) {
         console.log('artist search error');
         alert('Error: Artist not found');
     } else {
-    getSimilarArtists(artistId);
-    renderArtistInfo(artistName, data.list[0]);
-    renderPlaylist(data.list);
+      console.log('It works!')
+    // getSimilarArtists(artistId);
+    // renderArtistInfo(artistName, data.list[0]);
+    // renderPlaylist(data.list);
     }
 }
 
+
+
+
+
+
+
+// Event handler for searchbar function
 function handleEventSearch(event) {
     event.preventDefault();
   
@@ -55,6 +66,7 @@ function handleEventSearch(event) {
     return false;
   }
   
+  //
   function handleArtistSearch(event) {
     event.preventDefault();
   
@@ -63,13 +75,13 @@ function handleEventSearch(event) {
     artistSearches.push(artistSearch);
     localStorage.setItem('artistSearches', JSON.stringify(artistSearches));
     console.log(artistSearches);
-    retrieveArtistId(artistSearch);
+    // retrieveArtistId(artistSearch);
     artistSearchEl.value = "";
   
     return false;
   }
   
-
+//Event listener for search button
 if (eventSearchBtn) {
   eventSearchBtn.addEventListener('click', handleEventSearch);
   console.log(eventSearchBtn);
