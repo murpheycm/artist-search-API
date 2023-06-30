@@ -105,6 +105,7 @@ if (artistSearchForm) {
   console.log(artistSearchForm);
 }
 
+
 function getParams() {
     console.log(document.location)
     if (searchPageUrl.includes('artist')) {
@@ -128,3 +129,5 @@ function getParams() {
 }
 
 getParams();
+=======
+
