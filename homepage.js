@@ -8,36 +8,43 @@ var artistSearchEl = document.getElementById('search-artist-input');
 function handleEventSearch(event) {
     event.preventDefault();
   
-    var eventSearch = {
-      location: locationEl.value,
-      startDate: startDateEl.value,
-      endDate: endDateEl.value
-    };
+    
+      var searchLocation = locationEl.value;
+      var startDate = startDateEl.value;
+      var endDate = endDateEl.value;
   
-    var eventSearches = JSON.parse(localStorage.getItem('eventSearches')) || [];
-    eventSearches.push(eventSearch);
-    localStorage.setItem('eventSearches', JSON.stringify(eventSearches));
-    console.log(eventSearches);
-  
-    locationEl.value = "";
-    startDateEl.value = "";
-    endDateEl.value = "";
-  
-    return false;
+    
+        if (!location || !startDate || !endDate) {
+          console.error('You need a search input value!');
+          alert('Please enter a Location, Start Date, and End Date!')
+          return;
+        }
+      
+        var queryString = './searchpage.html?location=' + searchLocation + '&startdate=' + startDate + '&enddate=' + endDate;
+      
+      location.assign(queryString);
+      locationEl.value = "";
+      startDateEl.value = "";
+      endDateEl.value = "";
   }
+
   
   function handleArtistSearch(event) {
     event.preventDefault();
   
     var artistSearch = artistSearchEl.value;
-    var artistSearches = JSON.parse(localStorage.getItem('artistSearches')) || [];
-    artistSearches.push(artistSearch);
-    localStorage.setItem('artistSearches', JSON.stringify(artistSearches));
-    console.log(artistSearches);
+
+    if (!artistSearch) {
+      console.error('You need a search input value!');
+      alert('Please Enter an Artist')
+      return;
+    }
+  
+    var queryString = './searchpage.html?artist=' + artistSearch;
+  
+    location.assign(queryString);
   
     artistSearchEl.value = "";
-  
-    return false;
   }
   
 
