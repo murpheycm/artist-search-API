@@ -13,3 +13,7 @@
 .artistTile {
     margin-right: 15px
 }
+
+#search-input, #userSearchInput{
+    text-transform: uppercase;
+}

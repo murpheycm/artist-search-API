@@ -14,25 +14,23 @@
         <div class="column side">
             <section class="container" id="searchAside">
                     <div class="card p-3">
-                        <form id="test">
+                        <form>
                             <label>Find an Artist's Music, Tour Dates, and Similar Artists</label>
-                            <input type="text" placeholder="Search Artist" id="search-input" onkeydown="return event.key != 'Enter';">
+                            <input type="text" placeholder="Search Artist" id="search-input">
                         </form>
-                        <!-- <form class="block" id="event-search">
+                        <form class="block" id="event-search">
                             <label>Pick a Date Range and Location</label>
                             <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="start-date"> to <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="end-date">
                             <input type="text" placeholder="Zipcode or City, State" id="location-input">
-                        </form> -->
-                        <button type="submit" class="button shadowed" id="event-search-btn" onclick="saveSearch(event)">Find Events in my area</button>
+                        </form>
+                        <button class="button shadowed" id="event-search-btn">Find Events in my area</button>
                     </div>
             </section>
         </div>
     <div class="column main">
             <section class="container" id="resultsSection">
                 <div id="resultsSummary">
-                    <h1>Results for 
-                        <p id="userSearchInput"></p>
-                    </h1>
+                    <h1 id="userSearchInput"></h1>
                     <h2>Artist Bio</h2>
                     <div class="results" id="artistBio">
                     </div>
@@ -71,13 +69,10 @@
             </section>
         </div>
     </div>
-    <div id="dz-root"></div>
     
 
     <script src="https://cdn.korzh.com/metroui/v4.5.1/js/metro.min.js"></script>
-    <script src="https://e-cdn-files.dzcdn.net/js/min/dz.js"></script>
-
-    <script src="./searchpage.js"></script>
+    <script src="./test.js"></script>
 
 </body>
 
