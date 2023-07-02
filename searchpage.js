@@ -4,7 +4,7 @@ const artistSearchForm = document.querySelector('#search-artist-input');
 // const endDateEl = document.getElementById('end-date');
 // const startDateEl = document.getElementById('start-date');
 var artistSearchEl = document.getElementById('search-input').value;
-var artistSearchUrl = 'https://api.deezer.com/search?q='+ artistSearchEl.value;
+var artistSearchUrl = 'https://cors-anywhere.herokuapp.com/'+'https://api.deezer.com/search?q='+ artistSearchEl.value;
 
 
 //Click handler for the Artist Search button to return artist name and information.
@@ -21,22 +21,28 @@ function saveSearch(event) {
 };
 
 
-fetch('https://api.deezer.com/search?q=prince')
-  .then(res => {
-    console.log(res);
-    if(!res.ok){
-      console.log('Problem');
-      return;
-    };
-  });
-//       console.log(response);
-//       return response.json();
-//     }).then(data => {
-//         console.log(data);
-//   })
-//   .catch(error => {
-//       console.log(error);
-//   })
+function getInfo(){
+  fetch(artistSearchUrl
+    , {
+      cache: "reload",
+    }).then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      console.log(data);
+    });
+};
+
+document.getElementById('artistBio').innerHTML = getInfo();
+
+
+  //     return response.json();
+  //   }).then(data => {
+  //       console.log(data);
+  // })
+  // .catch(error => {
+  //     console.log(error);
+  // })
 //   userSearchText = localStorage.getItem("artistName");
 // }
 
