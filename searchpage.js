@@ -1,11 +1,22 @@
+const config = {
+  async: true,
+  crossDomain: true,
+  url : 'https://deezerdevs-deezer.p.rapidapi.com/search',
+  method: "GET",
+  cache: "reload",
+  headers: {
+    'X-RapidAPI-Key': '1f74ad6fe1msh722b05fd40167f7p168350jsn83917ae41088',
+    'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com',
+    }
+}
+
 const eventSearchBtn = document.getElementById('event-search-btn');
 const artistSearchForm = document.querySelector('#search-artist-input');
 // const locationEl = document.getElementById('location-input');
 // const endDateEl = document.getElementById('end-date');
 // const startDateEl = document.getElementById('start-date');
 var artistSearchEl = document.getElementById('search-input').value;
-var artistSearchUrl = 'https://cors-anywhere.herokuapp.com/'+'https://api.deezer.com/search?q='+ artistSearchEl.value;
-
+var artistSearchUrl = 'https://api.deezer.com/search?q='+ artistSearchEl.value;
 
 //Click handler for the Artist Search button to return artist name and information.
 function saveSearch(event) {
@@ -15,25 +26,59 @@ function saveSearch(event) {
   var artistNameValue = sessionStorage.getItem('artistName');
   console.log(artistNameValue);
   document.getElementById('userSearchInput').innerHTML = artistNameValue;
-  var artistSearchUrl = 'https://api.deezer.com/search?q='+ artistNameValue;
-  console.log(artistSearchUrl);
+  var artistNameUrl = 'https://api.deezer.com/search?q='+ artistNameValue;
+  console.log(artistNameUrl);
   event.preventDefault();
-};
 
 
-function getInfo(){
-  fetch(artistSearchUrl
-    , {
-      cache: "reload",
-    }).then(function (response) {
-      return response.json();
-    })
-    .then(function (data) {
-      console.log(data);
+  // function deezer(){
+    
+//     fetch('https://deezerdevs-deezer.p.rapidapi.com/search', {
+//       async: true,
+//       crossDomain: true,
+//       url : 'https://deezerdevs-deezer.p.rapidapi.com/search',
+//       method: "GET",
+//       headers: {
+//         'X-RapidAPI-Key': '1f74ad6fe1msh722b05fd40167f7p168350jsn83917ae41088',
+//         'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com',
+//         },
+//       data: {
+//         artistNameValue: 'q',
+//       }
+//     })
+//       .then(response => response.json())
+//       .then(data => {
+//         JSON.stringify(data);
+//         console.log(data);
+//       })
+//   };
+//   document.getElementById('artistBio').innerHTML = deezer();
+  
+// };
+  
+  function deezer() {
+    $.ajax({
+      "async": true,
+      "crossDomain": true,
+      "url":'https://deezerdevs-deezer.p.rapidapi.com/search',
+      "method": "GET",
+      "headers": {
+        'X-RapidAPI-Key': '1f74ad6fe1msh722b05fd40167f7p168350jsn83917ae41088',
+        'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com',
+        },
+      data: {
+        'q': artistNameValue
+      },
+
+      success: function (result) {
+        console.log(result.data);
+      }
+      
     });
-};
+  }
+  document.getElementById('artistBio').innerHTML = deezer();
 
-document.getElementById('artistBio').innerHTML = getInfo();
+};
 
 
   //     return response.json();
