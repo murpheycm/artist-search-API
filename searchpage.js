@@ -1,5 +1,9 @@
 var artistSearch = '';
-var options = {
+const lastApiKey = 'c023247640faedc6ce04a6fddaf22a29';
+const lastApiSecret = '2ea11c4880a7e5b4ac0f5545e0a61f7a';
+const lastMethod = 'artist.getInfo';
+const lastParams = {};
+var deezerOptions = {
   method: 'GET',
   headers: {
     'X-RapidAPI-Key': '1f74ad6fe1msh722b05fd40167f7p168350jsn83917ae41088',
@@ -14,48 +18,101 @@ var startDateEl = document.getElementById('start-date');
 var artistSearchEl = document.getElementById('search-artist-input');
 
 // Function to retrieve artist information
-function retrieveArtistInfo(artistSearch) {
+function retrieveDeezerInfo(artistSearch) {
     var artistSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + artistSearch;
   
-    fetch(artistSearchUrl, options)
+    fetch(artistSearchUrl, deezerOptions)
         .then(function(response) {
             return response.json();
         })
         .then(function(result) {
             console.log(result);
-    
-            if (result.data.length > 0) {
-                var artistName = result.data[0].artist.name;
-                var decodedSearch = decodeURIComponent(artistSearch).toLowerCase();
-                var decodedArtistName = decodeURIComponent(artistName).toLowerCase();
-        
-                if (decodedSearch !== decodedArtistName) {
-                    console.log('artist search error');
-                    console.log(decodedSearch, decodedArtistName);
-                    alert('Error: Artist not found');
-                } else {
-                    console.log('It works!');
-                    console.log(decodedSearch, decodedArtistName);
-                    var artistId = result.data[0].artist.id;
-                    var artistPicture = result.data[0].artist.picture;
-                    var artistLink = result.data[0].artist.link;
-                    console.log(artistId, artistPicture, artistLink);
-                    printArtistInfo(artistId, artistPicture, artistLink);
-                }
-            } else {
+  
+        var deezerArtistMatch = result.data.find(function(artist) {
+            var decodedSearch = decodeURIComponent(artistSearch).toLowerCase();
+            var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase();
+            return decodedSearch === decodedArtistName;
+        });
+  
+        if (deezerArtistMatch) {
+            console.log('It works!');
+            console.log(deezerArtistMatch.artist.name);
+            printDeezerInfo(deezerArtistMatch.artist);
+            retrieveLastFmInfo(deezerArtistMatch.artist.name);
+            saveArtistHistory(deezerArtistMatch);
+        } else {
             console.log('No artist found');
             alert('Error: Artist not found');
-            }
+        }
     })
-      .catch(function(error) {
+    .catch(function(error) {
         console.log('Error:', error);
-        alert('An error occurred while retrieving artist information');
-      });
+        alert('An error occurred while retrieving Deezer artist information');
+    });
 }
 
-function printArtistInfo(artistId, artistPicture, artistLink) {
+function retrieveLastFmInfo(name) {
+    var lastUrl = 'http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=' + name + '&api_key=' + lastApiKey + '&format=json';
+    console.log(name);
+    fetch(lastUrl)
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(result) {
+            console.log(result);
+
+            if (result.artist) {
+                console.log('Last FM artist found!');
+                console.log(result.artist.name);
+                printLastInfo(result.artist);
+            } else {
+                console.log('No Last FM artist info found');
+                alert('Error: Last FM info not found');
+            }
+        })
+        .catch(function(error) {
+            console.log('last FM Error:', error);
+            alert('An error occurred while retrieving Last.FM data');
+        });
+}
+
+function printDeezerInfo(artist) {
+    var artistName = artist.name;
+    var artistId = artist.id;
+    var artistPicture = artist.picture;
+    var artistLink = artist.link;
+    console.log(artistId, artistPicture, artistLink);
+    
     var artistPlaylistUrl = 'https://widget.deezer.com/widget/dark/artist/' + artistId + '/top_tracks';
     document.getElementById('artist-playlist').src = artistPlaylistUrl;
+  
+    var artistHeaderCard = document.createElement('div');
+    var artistHeaderName = document.createElement('h1');
+    var artistHeaderPicture = document.createElement('img');
+  
+    artistHeaderCard.setAttribute('class', 'row h-50 py-5 pr-10');
+    artistHeaderName.textContent = artistName;
+    artistHeaderName.setAttribute('class', 'text-uppercase leader');
+    artistHeaderPicture.setAttribute('class', 'header-picture');
+    artistHeaderPicture.setAttribute('src', artistPicture);
+  
+    artistHeaderCard.appendChild(artistHeaderPicture);
+    artistHeaderCard.appendChild(artistHeaderName);
+  
+    var artistHeaderEl = document.getElementById('artist-header');
+    artistHeaderEl.innerHTML = '';
+  
+    artistHeaderEl.appendChild(artistHeaderCard);
+}
+
+function printLastInfo(artist) {
+    var artistBio = artist.bio.content;
+    var artistBioLink = artist.bio.links.link.href;
+    var artistSimilarArr = artist.similar;
+
+    artistBioEl = document.getElementById('artist-bio');
+
+
 }
 
 function handleEventSearch(event) {
@@ -109,12 +166,11 @@ function saveEventHistory(searchLocation, startDate, endDate) {
   console.log(eventSearches);
 }
 
-function saveArtistHistory(artistSearch) {
-  var artistSearches = JSON.parse(localStorage.getItem('artistSearches')) || [];
-  artistSearches.push(artistSearch);
-  localStorage.setItem('artistSearches', JSON.stringify(artistSearches));
-  console.log(artistSearches);
-  retrieveArtistInfo(artistSearch);
+function saveArtistHistory(deezerArtistMatch) {
+    var artistSearches = JSON.parse(localStorage.getItem('artistSearches')) || [];
+    artistSearches.push(deezerArtistMatch);
+    localStorage.setItem('artistSearches', JSON.stringify(artistSearches));
+    console.log(artistSearches);
 }
 
 
@@ -136,7 +192,7 @@ function getParams() {
       var artistSearch = document.location.search.split('=').pop();
       console.log(artistSearch);
   
-      retrieveArtistInfo(artistSearch);
+      retrieveDeezerInfo(artistSearch);
       saveArtistHistory(artistSearch);
     } else if (document.location.search.includes('searchlocation')) {
       var eventSearchArr = document.location.search.split('&');
