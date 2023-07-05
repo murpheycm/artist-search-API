@@ -1,4 +1,5 @@
-const artistSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + artistSearchEl;
+var artistSearch = '';
+const artistSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + artistSearch;
 const options = {
 	method: 'GET',
 	headers: {
@@ -9,10 +10,10 @@ const options = {
 const searchPageUrl = document.location;
 var eventSearchBtn = document.querySelector('#event-search-btn');
 var artistSearchForm = document.querySelector('#search-artist-input');
-var locationEl = document.getElementById('#location-input');
-var endDateEl = document.getElementById('#end-date');
-var startDateEl = document.getElementById('#start-date');
-var artistSearchEl = document.getElementById('#search-artist-input');
+var locationEl = document.getElementById('location-input');
+var endDateEl = document.getElementById('end-date');
+var startDateEl = document.getElementById('start-date');
+var artistSearchEl = document.getElementById('search-artist-input');
 
 // Function to retrieve artist information
 function retrieveArtistInfo(artistSearchEl) {
@@ -48,33 +49,34 @@ function retrieveArtistInfo(artistSearchEl) {
 // Event handler for searchbar function
 function handleEventSearch(event) {
     event.preventDefault();
-
+  
     var eventSearch = {
-        searchLocation: locationEl.value,
-        startDate: startDateEl.value,
-        endDate: endDateEl.value
+      searchLocation: locationEl.value,
+      startDate: startDateEl.value,
+      endDate: endDateEl.value
     };
     saveEventHistory(eventSearch);
-
+  
     locationEl.value = "";
     startDateEl.value = "";
     endDateEl.value = "";
-
+  
     return false;
-
-function handleArtistSearch(event) {
-
+  }
+  
+  // Event handler for artist search form
+  function handleArtistSearch(event) {
     event.preventDefault();
   
     var artistSearch = artistSearchEl.value;
-    
+  
     saveArtistHistory(artistSearch);
     retrieveArtistId(artistSearch);
-    
+  
     artistSearchEl.value = "";
   
     return false;
-}
+  }
 
 function saveEventHistory() {
     var eventSearches = JSON.parse(localStorage.getItem('eventSearches')) || [];
@@ -126,5 +128,6 @@ function getParams() {
     }
     
 }
+
 
 getParams();
