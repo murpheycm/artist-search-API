@@ -14,27 +14,48 @@ var startDateEl = document.getElementById('start-date');
 var artistSearchEl = document.getElementById('search-artist-input');
 
 // Function to retrieve artist information
-async function retrieveArtistInfo(artistSearch) {
-  var artistSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + artistSearch;
-  var response = await fetch(artistSearchUrl, options);
-  var result = await response.json();
-  console.log(result);
+function retrieveArtistInfo(artistSearch) {
+    var artistSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + artistSearch;
+  
+    fetch(artistSearchUrl, options)
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(result) {
+            console.log(result);
+    
+            if (result.data.length > 0) {
+                var artistName = result.data[0].artist.name;
+                var decodedSearch = decodeURIComponent(artistSearch).toLowerCase();
+                var decodedArtistName = decodeURIComponent(artistName).toLowerCase();
+        
+                if (decodedSearch !== decodedArtistName) {
+                    console.log('artist search error');
+                    console.log(decodedSearch, decodedArtistName);
+                    alert('Error: Artist not found');
+                } else {
+                    console.log('It works!');
+                    console.log(decodedSearch, decodedArtistName);
+                    var artistId = result.data[0].artist.id;
+                    var artistPicture = result.data[0].artist.picture;
+                    var artistLink = result.data[0].artist.link;
+                    console.log(artistId, artistPicture, artistLink);
+                    printArtistInfo(artistId, artistPicture, artistLink);
+                }
+            } else {
+            console.log('No artist found');
+            alert('Error: Artist not found');
+            }
+    })
+      .catch(function(error) {
+        console.log('Error:', error);
+        alert('An error occurred while retrieving artist information');
+      });
+}
 
-  if (result.data.length > 0) {
-    var artistName = result.data[0].artist.name;
-    if (artistSearchEl.value !== artistName) {
-      console.log('artist search error');
-      alert('Error: Artist not found');
-    } else {
-      console.log('It works!');
-      // getSimilarArtists(artistId);
-      // renderArtistInfo(artistName, result.data[0]);
-      // renderPlaylist(result.data);
-    }
-  } else {
-    console.log('No artist found');
-    alert('Error: Artist not found');
-  }
+function printArtistInfo(artistId, artistPicture, artistLink) {
+    var artistPlaylistUrl = 'https://widget.deezer.com/widget/dark/artist/' + artistId + '/top_tracks';
+    document.getElementById('artist-playlist').src = artistPlaylistUrl;
 }
 
 function handleEventSearch(event) {
@@ -115,7 +136,7 @@ function getParams() {
       var artistSearch = document.location.search.split('=').pop();
       console.log(artistSearch);
   
-      retrieveArtistInfo(artistSearchEl);
+      retrieveArtistInfo(artistSearch);
       saveArtistHistory(artistSearch);
     } else if (document.location.search.includes('searchlocation')) {
       var eventSearchArr = document.location.search.split('&');

@@ -32,7 +32,7 @@
     <div class="column main">
             <section class="container" id="resultsSection">
                 <div id="resultsSummary">
-                    <h1>Results for <span id="userSearchInput"></span></h1>
+                    <span id="artistHeader"></span>
                     <h2>Artist Bio</h2>
                     <div class="results" id="artistBio">
                     </div>
@@ -41,8 +41,8 @@
                         <ul id="concertList"></ul>
                     </div>
                     <h2>Sample Playlist</h2>
-                    <div class="results" id="samplePlaylist">
-                        <iframe title="deezer-widget" src="https://widget.deezer.com/widget/auto/playlist/1479458365" width="100%" height="300" frameborder="0" allowtransparency="true" allow="encrypted-media; clipboard-write"></iframe>
+                    <div class="results">
+                        <iframe title="deezer-widget" width="100%" height="300" src='https://widget.deezer.com/widget/dark/artist/13/top_tracks' frameborder="0" allowtransparency="true" allow="encrypted-media; clipboard-write" id="artist-playlist"></iframe>
                     </div>
                     <h2>Similar Artists</h2>
                     <div class="results" id="similarArtists">
