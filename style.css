@@ -1,3 +1,7 @@
+body {
+    background-color: #260d1a;
+}
+
 /* Styling the searchpage.html columns and tiles*/
 .column.side {
     width: 25%;
