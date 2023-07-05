@@ -71,7 +71,7 @@ function handleArtistSearch(event) {
     var queryString = './searchpage.html?artist=' + artistSearch;
   
     localStorage.setItem('artistSearch', artistSearch);
-    window.location.href = queryString;
+    location.assign(queryString);
   
     artistSearchEl.value = '';
   }
@@ -109,8 +109,7 @@ if (eventSearchBtn){
     artistSearchForm.addEventListener('submit', handleArtistSearch);
   }
 
-
-  function getParams() {
+function getParams() {
     console.log(document.location);
     if (document.location.search.includes('artist')) {
       var artistSearch = document.location.search.split('=').pop();
