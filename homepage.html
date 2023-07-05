@@ -13,10 +13,11 @@
     </header>
     <div class="container" id="artist-search">
         <div class="card p-3">
-            <form>
+            <form id="artist-search-form">
                 <label>Find an Artist's Music, Tour Dates, and Similar Artists</label>
-                <input type="text" placeholder="Search Artist" data-role="input" data-search-button="true" id="search-artist-input">
-            </form>
+                <input type="text" placeholder="Search Artist" data-role="input" id="search-artist-input">
+                <button type="submit" class="button shadowed" id="artist-search-btn">Search</button>
+              </form>
             <form class="block" id="event-search">
                 <label>Pick a Date Range and Location to find Events in your Area</label>
                 <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="start-date"> to <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="end-date">
