@@ -13,3 +13,7 @@
 .artistTile {
     margin-right: 15px
 }
+
+.header-picture {
+    border-radius: 50%;
+}
