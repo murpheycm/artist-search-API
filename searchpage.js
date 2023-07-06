@@ -16,12 +16,13 @@ var locationEl = document.getElementById('location-input');
 var endDateEl = document.getElementById('end-date');
 var startDateEl = document.getElementById('start-date');
 var artistSearchEl = document.getElementById('search-artist-input');
+var artistTileEl = document.querySelector('.artist-tile')
 
 // Function to retrieve artist information
 function retrieveDeezerInfo(artistSearch) {
-    var artistSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + artistSearch;
+    var deezerSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + artistSearch;
   
-    fetch(artistSearchUrl, deezerOptions)
+    fetch(deezerSearchUrl, deezerOptions)
         .then(function(response) {
             return response.json();
         })
@@ -112,11 +113,11 @@ function printLastInfo(artist) {
 
     var artistBioCard = document.createElement('card');
     var artistBio = document.createElement('p');
-    var artistBioPublished = document.createElement('cite')
+    var artistBioPublished = document.createElement('cite');
     var artistBioUrl = document.createElement('a');
 
     artistBio.textContent = artistBioContent;
-    artistBio.setAttribute('class', 'py-3')
+    artistBio.setAttribute('class', 'py-3');
     artistBioPublished.textContent = artistBioPub;
     artistBioPublished.setAttribute('class', 'place-right');
     artistBioUrl.setAttribute('href', artistBioLink);
@@ -137,27 +138,73 @@ function printLastInfo(artist) {
     similarArtistsEl.innerHTML = '';
 
     for (var i = 0; i < artistSimilarArr.length; i++) {
-        var similarArtist = artistSimilarArr[i];
+        var similarArtist = artistSimilarArr[i].name;
+        console.log('Similar Artist: ', similarArtist);
         var similarArtistTile = document.createElement('div');
-        similarArtistTile.setAttribute('data-role', 'tile');
-        similarArtistTile.setAttribute('data-effect', 'hover-slide-down');
-        similarArtistTile.setAttribute('data-size', 'medium');
-        similarArtistTile.setAttribute('class', 'artistTile cell-2 pr-2');
-        similarArtistTile.setAttribute('id', 'artist-tile-' + i);
 
         var similarArtistImg = document.createElement('img');
         similarArtistImg.setAttribute('class', 'tileImg slide-front');
-        similarArtistImg.setAttribute('src', similarArtist.image[1]['#text']);
-        similarArtistImg.setAttribute('id', 'tile-img-' + i);
+
+        // Call the getSimilarArtistImg function
+        getSimilarArtistImg(similarArtist, similarArtistImg);
+
+        function getSimilarArtistImg(similarArtist, similarArtistImg) {
+            var deezerSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + encodeURIComponent(similarArtist);
+
+            fetch(deezerSearchUrl, deezerOptions)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch Similar Artist img Search');
+                    }
+                    return response.json();
+                })
+                .then(function(result) {
+                    if (result.data && result.data.length > 0) {
+                        console.log(similarArtist, result);
+                        // var deezerSimilarArtistMatch = result.data.find(function(similarArtist) {
+                        //     var decodedSearch = decodeURIComponent(similarArtist).toLowerCase();
+                        //     var decodedArtistName = decodeURIComponent(data[0].artist.name).toLowerCase();
+                        var deezerSimilarArtistMatch = result.data.find(function(artist) {
+                            var decodedSearch = decodeURIComponent(similarArtist).toLowerCase();
+                            var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase();
+                            return decodedSearch === decodedArtistName;
+                        });
+
+                        if (deezerSimilarArtistMatch) {
+                            console.log('It works!');
+                            console.log(deezerSimilarArtistMatch.artist.name);
+                            var similarArtistImgSrc = deezerSimilarArtistMatch.artist.picture_medium;
+                            similarArtistImg.setAttribute('src', similarArtistImgSrc);
+                            similarArtistImg.setAttribute('id', deezerSimilarArtistMatch.artist.name);
+                        } else {
+                            console.log(similarArtist, 'No artist found');
+                        }
+                    } else {
+                        console.log('No similar artist data found');
+                    }
+                })
+                .catch(function(error) {
+                    console.log('similar artist error', error);
+                });
+        }
+
+        similarArtistTile.setAttribute('data-role', 'tile');
+        similarArtistTile.setAttribute('data-effect', 'hover-zoom-right');
+        similarArtistTile.setAttribute('data-size', 'medium');
+        similarArtistTile.setAttribute('class', 'artist-tile cell-2 pr-2 border-black');
+        similarArtistTile.setAttribute('id', 'artist-tile-' + i);
 
         var similarArtistName = document.createElement('h5');
-        similarArtistName.setAttribute('class', 'artistName slide-back');
-        similarArtistName.textContent = similarArtist.name;
+        similarArtistName.setAttribute('class', 'artistName slide-back text-center p-4');
+        similarArtistName.textContent = similarArtist;
         similarArtistName.setAttribute('id', 'artist-name-' + i);
 
         similarArtistTile.appendChild(similarArtistImg);
         similarArtistTile.appendChild(similarArtistName);
         similarArtistsEl.appendChild(similarArtistTile);
+
+        // Call the getSimilarArtistImg function
+        getSimilarArtistImg(similarArtist, similarArtistImg);
     }
 }
 
@@ -228,9 +275,15 @@ if (eventSearchBtn){
     console.log(eventSearchBtn);
   }
   
-  if (artistSearchForm) {
+if (artistSearchForm) {
     artistSearchForm.addEventListener('submit', handleArtistSearch);
-  }
+    console.log(artistSearchForm);
+}
+
+// if (artistSearchEl) {
+//     this.addEventListener('click', handleArtistSearch(artistSearch));
+//     artistSearch = this.id;
+// }
 
 function getParams() {
     console.log(document.location);
@@ -252,7 +305,7 @@ function getParams() {
     } else {
       return;
     }
-  }
+}
 
 
 getParams();
