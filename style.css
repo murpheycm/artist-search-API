@@ -13,3 +13,32 @@
 .artistTile {
     margin-right: 15px
 }
+
+.header-picture {
+    border-radius: 50%;
+}
+
+.tile-img {
+    border-radius: 50%;
+}
+
+.similar-artist-img:hover {
+    filter: brightness(50%);
+}
+
+.tour-date-el {
+    list-style-type: none;
+}
+
+.hover-effect {
+    transition: transform 0.3s;
+  }
+  
+  .hover-effect:hover {
+    transform: scale(1.1);
+  }
+
+  .artist-name {
+    text-decoration: none;
+    color: inherit;
+  }

@@ -1,5 +1,5 @@
 var eventSearchBtn = document.querySelector('#event-search-btn');
-var artistSearchForm = document.querySelector('#artist-search form');
+var artistSearchForm = document.getElementById('artist-search-form');
 var locationEl = document.getElementById('location-input');
 var endDateEl = document.getElementById('end-date');
 var startDateEl = document.getElementById('start-date');
@@ -33,18 +33,19 @@ function handleEventSearch(event) {
     event.preventDefault();
   
     var artistSearch = artistSearchEl.value;
-
+  
     if (!artistSearch) {
       console.error('You need a search input value!');
-      alert('Please Enter an Artist')
+      alert('Please Enter an Artist');
       return;
     }
   
     var queryString = './searchpage.html?artist=' + artistSearch;
   
-    location.assign(queryString);
+    localStorage.setItem('artistSearch', artistSearch);
+    window.location.href = queryString;
   
-    artistSearchEl.value = "";
+    artistSearchEl.value = '';
   }
   
 
@@ -55,5 +56,4 @@ if (eventSearchBtn) {
 
 if (artistSearchForm) {
   artistSearchForm.addEventListener('submit', handleArtistSearch);
-  console.log(artistSearchForm);
 }
