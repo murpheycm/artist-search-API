@@ -92,7 +92,7 @@ function printDeezerInfo(artist) {
   
     artistHeaderCard.setAttribute('class', 'row h-50 py-5 pr-10');
     artistHeaderName.textContent = artistName;
-    artistHeaderName.setAttribute('class', 'text-uppercase leader');
+    artistHeaderName.setAttribute('class', 'text-uppercase leader ml-5');
     artistHeaderPicture.setAttribute('class', 'header-picture');
     artistHeaderPicture.setAttribute('src', artistPicture);
   
@@ -106,13 +106,59 @@ function printDeezerInfo(artist) {
 }
 
 function printLastInfo(artist) {
-    var artistBio = artist.bio.content;
+    var artistBioContent = artist.bio.summary.split('<a')[0];
     var artistBioLink = artist.bio.links.link.href;
-    var artistSimilarArr = artist.similar;
+    var artistBioPub = artist.bio.published;
 
-    artistBioEl = document.getElementById('artist-bio');
+    var artistBioCard = document.createElement('card');
+    var artistBio = document.createElement('p');
+    var artistBioPublished = document.createElement('cite')
+    var artistBioUrl = document.createElement('a');
 
+    artistBio.textContent = artistBioContent;
+    artistBio.setAttribute('class', 'py-3')
+    artistBioPublished.textContent = artistBioPub;
+    artistBioPublished.setAttribute('class', 'place-right');
+    artistBioUrl.setAttribute('href', artistBioLink);
+    artistBioUrl.textContent = 'For full bio on ' + artist.name + ' on Last.FM, click here.';
 
+    artistBioCard.appendChild(artistBio);
+    artistBioCard.appendChild(artistBioPublished);
+    artistBioCard.appendChild(artistBioUrl);
+
+    var artistBioEl = document.getElementById('artist-bio');
+    artistBioEl.innerHTML = '';
+    artistBioEl.appendChild(artistBioCard);
+
+    var artistSimilarArr = artist.similar.artist;
+    console.log(artistSimilarArr);
+
+    var similarArtistsEl = document.getElementById('similar-artists');
+    similarArtistsEl.innerHTML = '';
+
+    for (var i = 0; i < artistSimilarArr.length; i++) {
+        var similarArtist = artistSimilarArr[i];
+        var similarArtistTile = document.createElement('div');
+        similarArtistTile.setAttribute('data-role', 'tile');
+        similarArtistTile.setAttribute('data-effect', 'hover-slide-down');
+        similarArtistTile.setAttribute('data-size', 'medium');
+        similarArtistTile.setAttribute('class', 'artistTile cell-2 pr-2');
+        similarArtistTile.setAttribute('id', 'artist-tile-' + i);
+
+        var similarArtistImg = document.createElement('img');
+        similarArtistImg.setAttribute('class', 'tileImg slide-front');
+        similarArtistImg.setAttribute('src', similarArtist.image[1]['#text']);
+        similarArtistImg.setAttribute('id', 'tile-img-' + i);
+
+        var similarArtistName = document.createElement('h5');
+        similarArtistName.setAttribute('class', 'artistName slide-back');
+        similarArtistName.textContent = similarArtist.name;
+        similarArtistName.setAttribute('id', 'artist-name-' + i);
+
+        similarArtistTile.appendChild(similarArtistImg);
+        similarArtistTile.appendChild(similarArtistName);
+        similarArtistsEl.appendChild(similarArtistTile);
+    }
 }
 
 function handleEventSearch(event) {
