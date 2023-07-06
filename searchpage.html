@@ -19,6 +19,9 @@
                             <input type="text" placeholder="Search Artist" data-role="input" id="search-artist-input">
                             <button type="submit" class="button shadowed" id="artist-search-btn">Search</button>
                         </form>
+                    </div>
+                    <div id="artist-history" class="ml-3"></div>
+                    <div>
                         <form class="block" id="event-search">
                             <label>Pick a Date Range and Location</label>
                             <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="start-date"> to <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="end-date">
@@ -33,11 +36,10 @@
             <section class="container" id="resultsSection">
                 <div id="resultsSummary">
                     <span id="artist-header"></span>
-                    <h2>Artist Bio</h2>
-                    <div class="results" id="artist-bio">
-                    </div>
                     <div class="playlist py-4">
                         <iframe title="deezer-widget" width="100%" height="300" src='https://widget.deezer.com/widget/dark/artist/13/top_tracks' frameborder="0" allowtransparency="true" allow="encrypted-media; clipboard-write" id="artist-playlist"></iframe>
+                    </div>
+                    <div class="results" id="artist-bio">
                     </div>
                     <h2>Tour Dates</h2>
                     <ul class="clear" id="tour-dates">
