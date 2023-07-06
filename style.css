@@ -25,3 +25,7 @@
 .similar-artist-img:hover {
     filter: brightness(50%);
 }
+
+.tour-date-el {
+    list-style-type: none;
+}

@@ -263,19 +263,20 @@ function printTourDates(tourDates) {
         var tourDateAttrEl = document.createElement('p');
         var tourDateTicketBtn = document.createElement('button');
 
-        tourDateNameEl.textContent = 'Name: ' + tourDateName;
-        tourDateLocEl.textContent = 'Location: ' + tourDateLocation.tourDateVenue + ', ' + tourDateLocation.tourDateCity + ', ' + tourDateLocation.tourDateCountry;
-        tourDateTimeEl.textContent = 'Date & Time: ' + tourDate;
+        tourDateNameEl.textContent = tourDateName;
+        tourDateLocEl.textContent = tourDateLocation.tourDateVenue + ', ' + tourDateLocation.tourDateCity + ', ' + tourDateLocation.tourDateCountry;
+        tourDateTimeEl.textContent = tourDate;
         tourDateAttrEl.textContent = 'Attractions: ';
         for (var j = 0; j < tourDateAttrArray.length; j++) {
             tourDateAttrEl.textContent += tourDateAttrArray[j].name + ', ';
         }
         tourDateAttrEl.textContent = tourDateAttrEl.textContent.slice(0, -2);
         tourDateTicketBtn.textContent = 'Get Tickets';
+        tourDateEl.setAttribute('class', 'tour-date-el border-bottom border-size-2 bd-gray py-2');
         tourDateTicketBtn.setAttribute('href', tourDateTicketUrl);
-        tourDateAttrEl.setAttribute('class', 'second-label');
 
-        tourDateEl.appendChild(tourDateNameEl);
+
+        // tourDateEl.appendChild(tourDateNameEl);
         tourDateEl.appendChild(tourDateLocEl);
         tourDateEl.appendChild(tourDateTimeEl);
         tourDateEl.appendChild(tourDateAttrEl);
