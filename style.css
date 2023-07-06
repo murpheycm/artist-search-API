@@ -34,11 +34,12 @@
     transition: transform 0.3s;
   }
   
-  .hover-effect:hover {
+.hover-effect:hover {
     transform: scale(1.1);
-  }
+}
 
-  .artist-name {
-    text-decoration: none;
-    color: inherit;
-  }
+.artist-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
