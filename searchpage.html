@@ -19,16 +19,16 @@
                             <input type="text" placeholder="Search Artist" data-role="input" id="search-artist-input">
                             <button type="submit" class="button shadowed" id="artist-search-btn">Search</button>
                         </form>
+                        <div>
+                            <form class="block" id="event-search">
+                                <label>Pick a Date Range and Location</label>
+                                <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="start-date"> to <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="end-date">
+                                <input type="text" placeholder="Zipcode or City, State" id="location-input">
+                                <button class="button shadowed" id="event-search-btn">Find Events in my area</button>
+                            </form>
+                        </div>
                     </div>
                     <div id="artist-history" class="ml-3"></div>
-                    <div>
-                        <form class="block" id="event-search">
-                            <label>Pick a Date Range and Location</label>
-                            <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="start-date"> to <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="end-date">
-                            <input type="text" placeholder="Zipcode or City, State" id="location-input">
-                            <button class="button shadowed" id="event-search-btn">Find Events in my area</button>
-                        </form>
-                    </div>
                 </div>
             </section>
         </div>
