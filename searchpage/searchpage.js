@@ -31,54 +31,61 @@ function saveSearch(event) {
   event.preventDefault();
 
 
-  // function deezer(){
-    
-//     fetch('https://deezerdevs-deezer.p.rapidapi.com/search', {
+  
+//   function deezer() {
+//     var test = $.ajax({
 //       async: true,
 //       crossDomain: true,
-//       url : 'https://deezerdevs-deezer.p.rapidapi.com/search',
+//       url:'https://deezerdevs-deezer.p.rapidapi.com/search',
 //       method: "GET",
 //       headers: {
 //         'X-RapidAPI-Key': '1f74ad6fe1msh722b05fd40167f7p168350jsn83917ae41088',
 //         'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com',
 //         },
 //       data: {
-//         artistNameValue: 'q',
+//         'q': artistNameValue
+//       },
+//       dataType: 'json',
+//       success: function(result) {
+//         console.log(result);
 //       }
-//     })
-//       .then(response => response.json())
-//       .then(data => {
-//         JSON.stringify(data);
-//         console.log(data);
-//       })
-//   };
-//   document.getElementById('artistBio').innerHTML = deezer();
-  
-// };
-  
-  function deezer() {
-    $.ajax({
-      "async": true,
-      "crossDomain": true,
-      "url":'https://deezerdevs-deezer.p.rapidapi.com/search',
-      "method": "GET",
-      "headers": {
-        'X-RapidAPI-Key': '1f74ad6fe1msh722b05fd40167f7p168350jsn83917ae41088',
-        'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com',
-        },
-      data: {
-        'q': artistNameValue
-      },
-
-      success: function (result) {
-        console.log(result.data);
-      }
       
-    });
-  }
-  document.getElementById('artistBio').innerHTML = deezer();
+//     }).responseJSON;
+//    console.log(test)
+//   }
+
+//   document.getElementById('artistBio').innerHTML = deezer();
+
+// };
+
+    async function deezer() {
+      var test = await $.ajax({
+        async: true,
+        crossDomain: true,
+        url:'https://deezerdevs-deezer.p.rapidapi.com/search',
+        method: "GET",
+        headers: {
+          'X-RapidAPI-Key': '1f74ad6fe1msh722b05fd40167f7p168350jsn83917ae41088',
+          'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com',
+          },
+        data: {
+          'q': artistNameValue
+        },
+        dataType: 'json',
+        // success: function(result) {
+        //   // console.log(result);
+        // }
+        
+      })
+      console.log(test)
+      return test
+    }
+    deezer();
+    document.getElementById('artistBio').innerHTML = test;
+
 
 };
+
 
 
   //     return response.json();
