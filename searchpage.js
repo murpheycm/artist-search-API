@@ -16,7 +16,7 @@ var locationEl = document.getElementById('location-input');
 var endDateEl = document.getElementById('end-date');
 var startDateEl = document.getElementById('start-date');
 var artistSearchEl = document.getElementById('search-artist-input');
-var artistTileEl = document.querySelector('.artist-tile')
+var similarArtistTiles = document.querySelectorAll('.artist-tile')
 
 // Function to retrieve artist information
 function retrieveDeezerInfo(artistSearch) {
@@ -113,17 +113,20 @@ function printLastInfo(artist) {
     var artistBioLink = artist.bio.links.link.href;
     var artistBioPub = artist.bio.published;
 
-    var artistBioCard = document.createElement('card');
-    var artistBio = document.createElement('p');
-    var artistBioPublished = document.createElement('cite');
-    var artistBioUrl = document.createElement('a');
+    var artistBioCard = document.createElement('div');
+    artistBioCard.setAttribute('class', '');
 
+    var artistBio = document.createElement('p');
     artistBio.textContent = artistBioContent;
     artistBio.setAttribute('class', 'py-3');
+
+    var artistBioPublished = document.createElement('cite');
     artistBioPublished.textContent = artistBioPub;
     artistBioPublished.setAttribute('class', 'place-right');
+
+    var artistBioUrl = document.createElement('a');
     artistBioUrl.setAttribute('href', artistBioLink);
-    artistBioUrl.textContent = 'For full bio on ' + artist.name + ' on Last.FM, click here.';
+    artistBioUrl.textContent = 'For the full bio on ' + artist.name + ' on Last.FM, click here.';
 
     artistBioCard.appendChild(artistBio);
     artistBioCard.appendChild(artistBioPublished);
@@ -140,74 +143,77 @@ function printLastInfo(artist) {
     similarArtistsEl.innerHTML = '';
 
     for (var i = 0; i < artistSimilarArr.length; i++) {
-        var similarArtist = artistSimilarArr[i].name;
-        console.log('Similar Artist: ', similarArtist);
-        var similarArtistTile = document.createElement('div');
+    var similarArtist = artistSimilarArr[i].name;
+    console.log('Similar Artist:', similarArtist);
 
-        var similarArtistImg = document.createElement('img');
-        similarArtistImg.setAttribute('class', 'tileImg slide-front');
+    var similarArtistTile = document.createElement('a');
+    similarArtistTile.setAttribute('class', 'artist-tile cell-2 pr-2 border-black flex-justify-center flex-align-center hover-effect');
+    similarArtistTile.setAttribute('id', similarArtist);
+    similarArtistTile.setAttribute('href', '#');
+    similarArtistTile.setAttribute('data-effect', 'hover-zoom-right');
 
-        // Call the getSimilarArtistImg function
-        getSimilarArtistImg(similarArtist, similarArtistImg);
+    var similarArtistImg = document.createElement('img');
+    similarArtistImg.setAttribute('class', 'tile-img slide-front');
 
-        function getSimilarArtistImg(similarArtist, similarArtistImg) {
-            var deezerSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + encodeURIComponent(similarArtist);
+    var similarArtistName = document.createElement('h5');
+    similarArtistName.setAttribute('class', 'artist-name slide-back text-center p-4');
+    similarArtistName.textContent = similarArtist;
+    similarArtistName.setAttribute('id', similarArtist);
 
-            fetch(deezerSearchUrl, deezerOptions)
-                .then(function(response) {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch Similar Artist img Search');
-                    }
-                    return response.json();
-                })
-                .then(function(result) {
-                    if (result.data && result.data.length > 0) {
-                        console.log(similarArtist, result);
-                        // var deezerSimilarArtistMatch = result.data.find(function(similarArtist) {
-                        //     var decodedSearch = decodeURIComponent(similarArtist).toLowerCase();
-                        //     var decodedArtistName = decodeURIComponent(data[0].artist.name).toLowerCase();
-                        var deezerSimilarArtistMatch = result.data.find(function(artist) {
-                            var decodedSearch = decodeURIComponent(similarArtist).toLowerCase();
-                            var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase();
-                            return decodedSearch === decodedArtistName;
-                        });
+    similarArtistTile.appendChild(similarArtistImg);
+    similarArtistTile.appendChild(similarArtistName);
+    similarArtistsEl.appendChild(similarArtistTile);
+    
+    console.log('Similar Artist', similarArtistTile);
+    similarArtistTile.addEventListener('click', function(event) {
+        event.preventDefault();
+        var artistSearch = event.target.id;
+        var queryString = '?artist=' + artistSearch;
+        history.pushState(null, '', queryString);
+          
+        console.log('Similar Artist Search: ', artistSearch);
+        getParams();
+      });
 
-                        if (deezerSimilarArtistMatch) {
-                            console.log('It works!');
-                            console.log(deezerSimilarArtistMatch.artist.name);
-                            var similarArtistImgSrc = deezerSimilarArtistMatch.artist.picture_medium;
-                            similarArtistImg.setAttribute('src', similarArtistImgSrc);
-                            similarArtistImg.setAttribute('id', deezerSimilarArtistMatch.artist.name);
-                        } else {
-                            console.log(similarArtist, 'No artist found');
-                        }
-                    } else {
-                        console.log('No similar artist data found');
-                    }
-                })
-                .catch(function(error) {
-                    console.log('similar artist error', error);
-                });
-        }
-
-        similarArtistTile.setAttribute('data-role', 'tile');
-        similarArtistTile.setAttribute('data-effect', 'hover-zoom-right');
-        similarArtistTile.setAttribute('data-size', 'medium');
-        similarArtistTile.setAttribute('class', 'artist-tile cell-2 pr-2 border-black flex-justify-center flex-align-center');
-        similarArtistTile.setAttribute('id', 'artist-tile-' + i);
-
-        var similarArtistName = document.createElement('h5');
-        similarArtistName.setAttribute('class', 'artistName slide-back text-center p-4');
-        similarArtistName.textContent = similarArtist;
-        similarArtistName.setAttribute('id', 'artist-name-' + i);
-
-        similarArtistTile.appendChild(similarArtistImg);
-        similarArtistTile.appendChild(similarArtistName);
-        similarArtistsEl.appendChild(similarArtistTile);
-
-        // Call the getSimilarArtistImg function
-        getSimilarArtistImg(similarArtist, similarArtistImg);
+    getSimilarArtistImg(similarArtist, similarArtistImg, similarArtistTile);
     }
+}
+  
+  function getSimilarArtistImg(similarArtist, similarArtistImg) {
+    var deezerSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + encodeURIComponent(similarArtist);
+  
+    fetch(deezerSearchUrl, deezerOptions)
+        .then(function(response) {
+            if (!response.ok) {
+            throw new Error('Failed to fetch Similar Artist image');
+            }
+            return response.json();
+        })
+        .then(function(result) {
+            if (result.data && result.data.length > 0) {
+            console.log(similarArtist, result);
+            var deezerSimilarArtistMatch = result.data.find(function(artist) {
+                var decodedSearch = decodeURIComponent(similarArtist).toLowerCase();
+                var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase();
+                return decodedSearch === decodedArtistName;
+            });
+    
+            if (deezerSimilarArtistMatch) {
+                console.log('Similar Artist found:', deezerSimilarArtistMatch.artist.name);
+                var similarArtistImgSrc = deezerSimilarArtistMatch.artist.picture_medium;
+                similarArtistImg.setAttribute('src', similarArtistImgSrc);
+                similarArtistImg.setAttribute('id', similarArtist);
+
+            } else {
+                console.log('No artist found for', similarArtist);
+            }
+            } else {
+            console.log('No similar artist data found');
+            }
+        })
+        .catch(function(error) {
+            console.log('Similar artist error:', error);
+        });
 }
 
 function getTourDates(deezerArtistName) {
@@ -229,6 +235,7 @@ function getTourDates(deezerArtistName) {
                 alert('Error: Tour dates not found');
                 var tourDatesEl = document.getElementById('tour-dates');
                 var noTourDates = document.createElement('p');
+                tourDatesEl.innerHTML = '';
                 noTourDates.textContent = 'No Tour Dates at this time.';
                 tourDatesEl.appendChild(noTourDates);
             }
@@ -236,17 +243,29 @@ function getTourDates(deezerArtistName) {
         .catch(function(error) {
             console.log('Error:', error);
             alert('An error occurred while retrieving artist tour date information');
-        });
+    });
 }
 
 function printTourDates(tourDates) {
     var tourDatesEl = document.getElementById('tour-dates');
     tourDatesEl.innerHTML = '';
-
+  
+    if (tourDates.length === 0) {
+        var noTourDatesMessage = document.createElement('li');
+        noTourDatesMessage.textContent = 'No tour dates available.';
+        tourDatesEl.appendChild(noTourDatesMessage);
+        return;
+    }
+  
+    tourDates.sort(function(a, b) {
+        var dateA = new Date(a.dates.start.dateTime);
+        var dateB = new Date(b.dates.start.dateTime);
+        return dateA - dateB;
+    });
+  
     for (var i = 0; i < tourDates.length; i++) {
-        console.log(tourDates[i]);
         var tourDateName = tourDates[i].name;
-        var tourDate = tourDates[i].dates.start.dateTime;
+        var tourDate = dayjs(tourDates[i].dates.start.dateTime).format('dddd, MMMM D, YYYY, h:mm A');
         var tourDateLocation = {
             tourDateVenue: tourDates[i]._embedded.venues[0].name,
             tourDateCity: tourDates[i]._embedded.venues[0].city.name,
@@ -255,14 +274,14 @@ function printTourDates(tourDates) {
         var tourDateAttrArray = tourDates[i]._embedded.attractions;
         var tourDateTicketUrl = tourDates[i].url;
         console.log(tourDateName, tourDate, tourDateLocation, tourDateAttrArray, tourDateTicketUrl);
-
+    
         var tourDateEl = document.createElement('li');
         var tourDateNameEl = document.createElement('p');
         var tourDateLocEl = document.createElement('p');
         var tourDateTimeEl = document.createElement('p');
         var tourDateAttrEl = document.createElement('p');
         var tourDateTicketBtn = document.createElement('button');
-
+  
         tourDateNameEl.textContent = tourDateName;
         tourDateLocEl.textContent = tourDateLocation.tourDateVenue + ', ' + tourDateLocation.tourDateCity + ', ' + tourDateLocation.tourDateCountry;
         tourDateTimeEl.textContent = tourDate;
@@ -272,54 +291,54 @@ function printTourDates(tourDates) {
         }
         tourDateAttrEl.textContent = tourDateAttrEl.textContent.slice(0, -2);
         tourDateTicketBtn.textContent = 'Get Tickets';
-
+        tourDateTicketBtn.setAttribute('class', 'place-right');
+    
         (function(url) {
             tourDateTicketBtn.addEventListener('click', function() {
-                window.open(url, '_blank');
+            window.open(url, '_blank');
             });
         })(tourDateTicketUrl);
-
-        tourDateEl.setAttribute('class', 'tour-date-el border-bottom border-size-2 bd-gray py-2');
-
+  
+        tourDateEl.setAttribute('class', 'tour-date-el border-bottom border-size-2 bd-gray pb-10');
+    
         tourDateEl.appendChild(tourDateNameEl);
         tourDateEl.appendChild(tourDateLocEl);
         tourDateEl.appendChild(tourDateTimeEl);
         tourDateEl.appendChild(tourDateAttrEl);
         tourDateEl.appendChild(tourDateTicketBtn);
-
+    
         tourDatesEl.appendChild(tourDateEl);
     }
-}
-
-function handleEventSearch(event) {
-  event.preventDefault();
-
-  var searchLocation = locationEl.value;
-  var startDate = startDateEl.value;
-  var endDate = endDateEl.value;
-
-  if (!searchLocation || !startDate || !endDate) {
-    console.error('You need a search input value!');
-    alert('Please enter a Location, Start Date, and End Date!');
-    return;
   }
 
-  var queryString = './searchpage.html?searchlocation=' + searchLocation + '&startdate=' + startDate + '&enddate=' + endDate;
-  location.assign(queryString);
-  locationEl.value = '';
-  startDateEl.value = '';
-  endDateEl.value = '';
+function handleEventSearch(event) {
+    event.preventDefault();
+
+    var searchLocation = locationEl.value;
+    var startDate = startDateEl.value;
+    var endDate = endDateEl.value;
+
+    if (!searchLocation || !startDate || !endDate) {
+        console.error('You need a search input value!');
+        alert('Please enter a Location, Start Date, and End Date!');
+        return;
+    }
+
+    var queryString = './searchpage.html?searchlocation=' + searchLocation + '&startdate=' + startDate + '&enddate=' + endDate;
+    location.assign(queryString);
+    locationEl.value = '';
+    startDateEl.value = '';
+    endDateEl.value = '';
 }
 
 function handleArtistSearch(event) {
-    event.preventDefault();
-  
+    event.preventDefault();  
     var artistSearch = artistSearchEl.value;
   
     if (!artistSearch) {
-      console.error('You need a search input value!');
-      alert('Please Enter an Artist');
-      return;
+        console.error('You need a search input value!');
+        alert('Please Enter an Artist');
+        return;
     }
   
     var queryString = './searchpage.html?artist=' + artistSearch;
@@ -331,15 +350,15 @@ function handleArtistSearch(event) {
   }
 
 function saveEventHistory(searchLocation, startDate, endDate) {
-  var eventSearches = JSON.parse(localStorage.getItem('eventSearches')) || [];
-  var eventSearch = {
-    searchLocation: searchLocation,
-    startDate: startDate,
-    endDate: endDate
-  };
-  eventSearches.push(eventSearch);
-  localStorage.setItem('eventSearches', JSON.stringify(eventSearches));
-  console.log(eventSearches);
+    var eventSearches = JSON.parse(localStorage.getItem('eventSearches')) || [];
+    var eventSearch = {
+        searchLocation: searchLocation,
+        startDate: startDate,
+        endDate: endDate
+    };
+    eventSearches.push(eventSearch);
+    localStorage.setItem('eventSearches', JSON.stringify(eventSearches));
+    console.log(eventSearches);
 }
 
 function saveArtistHistory(deezerArtistMatch) {
@@ -349,10 +368,6 @@ function saveArtistHistory(deezerArtistMatch) {
     console.log(artistSearches);
 }
 
-
-
-  
-//Event listener for search button
 if (eventSearchBtn){
     eventSearchBtn.addEventListener('click', handleEventSearch);
     console.log(eventSearchBtn);
@@ -363,30 +378,25 @@ if (artistSearchForm) {
     console.log(artistSearchForm);
 }
 
-// if (artistSearchEl) {
-//     this.addEventListener('click', handleArtistSearch(artistSearch));
-//     artistSearch = this.id;
-// }
-
 function getParams() {
     console.log(document.location);
     if (document.location.search.includes('artist')) {
-      var artistSearch = document.location.search.split('=').pop();
-      console.log(artistSearch);
-  
-      retrieveDeezerInfo(artistSearch);
-      saveArtistHistory(artistSearch);
+        var artistSearch = document.location.search.split('=').pop();
+        console.log(artistSearch);
+    
+        retrieveDeezerInfo(artistSearch);
+        saveArtistHistory(artistSearch);
     } else if (document.location.search.includes('searchlocation')) {
-      var eventSearchArr = document.location.search.split('&');
-  
-      var searchLocation = eventSearchArr[0].split('=').pop();
-      var startDate = eventSearchArr[1].split('=').pop();
-      var endDate = eventSearchArr[2].split('=').pop();
-      console.log(eventSearchArr);
-  
-      saveEventHistory(searchLocation, startDate, endDate);
+        var eventSearchArr = document.location.search.split('&');
+    
+        var searchLocation = eventSearchArr[0].split('=').pop();
+        var startDate = eventSearchArr[1].split('=').pop();
+        var endDate = eventSearchArr[2].split('=').pop();
+        console.log(eventSearchArr);
+    
+        saveEventHistory(searchLocation, startDate, endDate);
     } else {
-      return;
+        return;
     }
 }
 

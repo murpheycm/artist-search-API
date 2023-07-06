@@ -8,7 +8,7 @@
   <link rel="stylesheet" type="text/css" href="./style.css" />
 </head>
 
-<body>
+<body class="mx-auto">
     <div class="row">
         <div class="column side">
             <section class="container" id="searchAside">
@@ -40,10 +40,10 @@
                         <iframe title="deezer-widget" width="100%" height="300" src='https://widget.deezer.com/widget/dark/artist/13/top_tracks' frameborder="0" allowtransparency="true" allow="encrypted-media; clipboard-write" id="artist-playlist"></iframe>
                     </div>
                     <h2>Tour Dates</h2>
-                    <ul class="flex-justify-between" id="tour-dates">T
+                    <ul class="clear" id="tour-dates">
                     </ul>
                     <h2>Similar Artists</h2>
-                    <div class="results row flex-justify-between" id="similar-artists">
+                    <div class="results row flex-justify-around" id="similar-artists">
                     </div>
                 </div>
             </section>
@@ -52,6 +52,7 @@
     
 
     <script src="https://cdn.korzh.com/metroui/v4.5.1/js/metro.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
     <script src="./searchpage.js"></script>
 
 </body>
