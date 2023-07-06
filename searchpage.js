@@ -37,10 +37,12 @@ function retrieveDeezerInfo(artistSearch) {
   
         if (deezerArtistMatch) {
             console.log('It works!');
-            console.log(deezerArtistMatch.artist.name);
+            console.log('Deezer Artist Match: ', deezerArtistMatch.artist.name);
+            var deezerArtistName = deezerArtistMatch.artist.name
             printDeezerInfo(deezerArtistMatch.artist);
-            retrieveLastFmInfo(deezerArtistMatch.artist.name);
-            saveArtistHistory(deezerArtistMatch);
+            retrieveLastFmInfo(deezerArtistName);
+            saveArtistHistory(deezerArtistName);
+            getTourDates(deezerArtistName);
         } else {
             console.log('No artist found');
             alert('Error: Artist not found');
@@ -191,7 +193,7 @@ function printLastInfo(artist) {
         similarArtistTile.setAttribute('data-role', 'tile');
         similarArtistTile.setAttribute('data-effect', 'hover-zoom-right');
         similarArtistTile.setAttribute('data-size', 'medium');
-        similarArtistTile.setAttribute('class', 'artist-tile cell-2 pr-2 border-black');
+        similarArtistTile.setAttribute('class', 'artist-tile cell-2 pr-2 border-black flex-justify-center flex-align-center');
         similarArtistTile.setAttribute('id', 'artist-tile-' + i);
 
         var similarArtistName = document.createElement('h5');
@@ -205,6 +207,82 @@ function printLastInfo(artist) {
 
         // Call the getSimilarArtistImg function
         getSimilarArtistImg(similarArtist, similarArtistImg);
+    }
+}
+
+function getTourDates(deezerArtistName) {
+    var ticketmasterApiUrl = 'https://app.ticketmaster.com/discovery/v2/events?apikey=tNLADXtluSf6FmnNfmVlChS3d2UQXC6G&keyword=' + deezerArtistName + '&locale=*';
+    fetch(ticketmasterApiUrl)
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(result) {
+            console.log('ticketmaster', result);
+
+            if (result._embedded && result._embedded.events && result._embedded.events.length > 0) {
+                console.log('Ticketmaster Response: ', result);
+                var tourDates = result._embedded.events;
+                console.log(tourDates);
+                printTourDates(tourDates);
+            } else {
+                console.log('No tour dates found');
+                alert('Error: Tour dates not found');
+                var tourDatesEl = document.getElementById('tour-dates');
+                var noTourDates = document.createElement('p');
+                noTourDates.textContent = 'No Tour Dates at this time.';
+                tourDatesEl.appendChild(noTourDates);
+            }
+        })
+        .catch(function(error) {
+            console.log('Error:', error);
+            alert('An error occurred while retrieving artist tour date information');
+        });
+}
+
+function printTourDates(tourDates) {
+    var tourDatesEl = document.getElementById('tour-dates');
+    tourDatesEl.innerHTML = '';
+
+    for (var i = 0; i < tourDates.length; i++) {
+        console.log(tourDates[i]);
+        var tourDateName = tourDates[i].name;
+        var tourDate = tourDates[i].dates.start.dateTime;
+        var tourDateLocation = {
+            tourDateVenue: tourDates[i]._embedded.venues[0].name,
+            tourDateCity: tourDates[i]._embedded.venues[0].city.name,
+            tourDateCountry: tourDates[i]._embedded.venues[0].country.name
+        };
+        var tourDateAttrArray = tourDates[i]._embedded.attractions;
+        var tourDateTicketUrl = tourDates[i].url;
+        console.log(tourDateName, tourDate, tourDateLocation, tourDateAttrArray, tourDateTicketUrl);
+
+        var tourDateEl = document.createElement('li');
+        var tourDateNameEl = document.createElement('p');
+        var tourDateLocEl = document.createElement('p');
+        var tourDateTimeEl = document.createElement('p');
+        var tourDateAttrEl = document.createElement('p');
+        var tourDateTicketBtn = document.createElement('button');
+
+        tourDateNameEl.textContent = tourDateName;
+        tourDateLocEl.textContent = tourDateLocation.tourDateVenue + ', ' + tourDateLocation.tourDateCity + ', ' + tourDateLocation.tourDateCountry;
+        tourDateTimeEl.textContent = tourDate;
+        tourDateAttrEl.textContent = 'Attractions: ';
+        for (var j = 0; j < tourDateAttrArray.length; j++) {
+            tourDateAttrEl.textContent += tourDateAttrArray[j].name + ', ';
+        }
+        tourDateAttrEl.textContent = tourDateAttrEl.textContent.slice(0, -2);
+        tourDateTicketBtn.textContent = 'Get Tickets';
+        tourDateEl.setAttribute('class', 'tour-date-el border-bottom border-size-2 bd-gray py-2');
+        tourDateTicketBtn.setAttribute('href', tourDateTicketUrl);
+
+
+        // tourDateEl.appendChild(tourDateNameEl);
+        tourDateEl.appendChild(tourDateLocEl);
+        tourDateEl.appendChild(tourDateTimeEl);
+        tourDateEl.appendChild(tourDateAttrEl);
+        tourDateEl.appendChild(tourDateTicketBtn);
+
+        tourDatesEl.appendChild(tourDateEl);
     }
 }
 
