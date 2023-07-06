@@ -17,7 +17,7 @@ var endDateEl = document.getElementById('end-date');
 var startDateEl = document.getElementById('start-date');
 var artistSearchEl = document.getElementById('search-artist-input');
 var similarArtistTiles = document.querySelectorAll('.artist-tile')
-
+var artistHistoryEl = document.getElementById('artist-history');
 // Function to retrieve artist information
 function retrieveDeezerInfo(artistSearch) {
     var deezerSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + artistSearch;
@@ -41,7 +41,6 @@ function retrieveDeezerInfo(artistSearch) {
             var deezerArtistName = deezerArtistMatch.artist.name
             printDeezerInfo(deezerArtistMatch.artist);
             retrieveLastFmInfo(deezerArtistName);
-            saveArtistHistory(deezerArtistName);
             getTourDates(deezerArtistName);
         } else {
             console.log('No artist found');
@@ -106,31 +105,52 @@ function printDeezerInfo(artist) {
     artistHeaderEl.innerHTML = '';
   
     artistHeaderEl.appendChild(artistHeaderCard);
+
+    saveArtistHistory(artistName, artistPicture);
 }
 
 function printLastInfo(artist) {
+    var artistBioText = 'About ' + artist.name;
     var artistBioContent = artist.bio.summary.split('<a')[0];
     var artistBioLink = artist.bio.links.link.href;
     var artistBioPub = artist.bio.published;
+    var artistGenre = artist.tags.tag[0].name;
+    var artistListeners = artist.stats.listeners;
 
     var artistBioCard = document.createElement('div');
     artistBioCard.setAttribute('class', '');
 
+    var artistBioTitle = document.createElement('h2');
+    artistBioTitle.textContent = artistBioText;
+
     var artistBio = document.createElement('p');
     artistBio.textContent = artistBioContent;
-    artistBio.setAttribute('class', 'py-3');
+    artistBio.setAttribute('class', 'py-1');
 
-    var artistBioPublished = document.createElement('cite');
-    artistBioPublished.textContent = artistBioPub;
-    artistBioPublished.setAttribute('class', 'place-right');
+    var artistDetailsContainer = document.createElement('div');
+    artistDetailsContainer.setAttribute('class', 'artist-details');
 
+    var artistGenreInfo = document.createElement('span');
+    artistGenreInfo.innerHTML = 'Genre<br>' + artistGenre;
+
+    var artistListenersInfo = document.createElement('span');
+    artistListenersInfo.innerHTML = 'Listeners<br>' + artistListeners;
+
+    artistDetailsContainer.appendChild(artistGenreInfo);
+    artistDetailsContainer.appendChild(artistListenersInfo);
+
+    var artistBioUrlContainer = document.createElement('div');
+    artistBioUrlContainer.setAttribute('class', 'bio-url-container');
     var artistBioUrl = document.createElement('a');
     artistBioUrl.setAttribute('href', artistBioLink);
+    artistBioUrl.setAttribute('class', 'clear-bottom');
     artistBioUrl.textContent = 'For the full bio on ' + artist.name + ' on Last.FM, click here.';
+    artistBioUrlContainer.appendChild(artistBioUrl);
 
+    artistBioCard.appendChild(artistBioTitle);
     artistBioCard.appendChild(artistBio);
-    artistBioCard.appendChild(artistBioPublished);
-    artistBioCard.appendChild(artistBioUrl);
+    artistBioCard.appendChild(artistDetailsContainer);
+    artistBioCard.appendChild(artistBioUrlContainer);
 
     var artistBioEl = document.getElementById('artist-bio');
     artistBioEl.innerHTML = '';
@@ -143,39 +163,41 @@ function printLastInfo(artist) {
     similarArtistsEl.innerHTML = '';
 
     for (var i = 0; i < artistSimilarArr.length; i++) {
-    var similarArtist = artistSimilarArr[i].name;
-    console.log('Similar Artist:', similarArtist);
+        var similarArtist = artistSimilarArr[i].name;
+        console.log('Similar Artist:', similarArtist);
 
-    var similarArtistTile = document.createElement('a');
-    similarArtistTile.setAttribute('class', 'artist-tile cell-2 pr-2 border-black flex-justify-center flex-align-center hover-effect');
-    similarArtistTile.setAttribute('id', similarArtist);
-    similarArtistTile.setAttribute('href', '#');
-    similarArtistTile.setAttribute('data-effect', 'hover-zoom-right');
+        var similarArtistTile = document.createElement('a');
+        similarArtistTile.setAttribute('class', 'artist-tile cell-2 pr-2 border-black flex-justify-center flex-align-center hover-effect');
+        similarArtistTile.setAttribute('id', similarArtist);
+        similarArtistTile.setAttribute('href', '#');
+        similarArtistTile.setAttribute('data-effect', 'hover-zoom-right');
+        similarArtistTile.style.textDecoration = 'none';
 
-    var similarArtistImg = document.createElement('img');
-    similarArtistImg.setAttribute('class', 'tile-img slide-front');
+        var similarArtistImg = document.createElement('img');
+        similarArtistImg.setAttribute('class', 'tile-img slide-front');
 
-    var similarArtistName = document.createElement('h5');
-    similarArtistName.setAttribute('class', 'artist-name slide-back text-center p-4');
-    similarArtistName.textContent = similarArtist;
-    similarArtistName.setAttribute('id', similarArtist);
+        var similarArtistName = document.createElement('h5');
+        similarArtistName.setAttribute('class', 'artist-name slide-back text-center p-4');
+        similarArtistName.setAttribute('style', 'text-decoration:none !important; color: black; text-decoration-line: none;');
+        similarArtistName.textContent = similarArtist;
+        similarArtistName.setAttribute('id', similarArtist);
 
-    similarArtistTile.appendChild(similarArtistImg);
-    similarArtistTile.appendChild(similarArtistName);
-    similarArtistsEl.appendChild(similarArtistTile);
-    
-    console.log('Similar Artist', similarArtistTile);
-    similarArtistTile.addEventListener('click', function(event) {
-        event.preventDefault();
-        var artistSearch = event.target.id;
-        var queryString = '?artist=' + artistSearch;
-        history.pushState(null, '', queryString);
-          
-        console.log('Similar Artist Search: ', artistSearch);
-        getParams();
-      });
+        similarArtistTile.appendChild(similarArtistImg);
+        similarArtistTile.appendChild(similarArtistName);
+        similarArtistsEl.appendChild(similarArtistTile);
 
-    getSimilarArtistImg(similarArtist, similarArtistImg, similarArtistTile);
+        console.log('Similar Artist', similarArtistTile);
+        similarArtistTile.addEventListener('click', function(event) {
+            event.preventDefault();
+            var artistSearch = event.target.id;
+            var queryString = '?artist=' + artistSearch;
+            history.pushState(null, '', queryString);
+
+            console.log('Similar Artist Search: ', artistSearch);
+            getParams();
+        });
+
+        getSimilarArtistImg(similarArtist, similarArtistImg, similarArtistTile);
     }
 }
   
@@ -349,6 +371,60 @@ function handleArtistSearch(event) {
     artistSearchEl.value = '';
   }
 
+function readArtistHistory() {
+    var artistSearches = localStorage.getItem('artistSearches');
+    if (artistSearches) {
+        artistSearches = JSON.parse(artistSearches);
+        renderArtistHistory(artistSearches);
+    } else {
+        artistSearches = [];
+    }
+    return artistSearches;
+}
+
+function renderArtistHistory(artistSearches) {
+    artistHistoryEl.innerHTML = '';
+
+    var limit = Math.min(8, artistSearches.length);
+
+    for (var i = artistSearches.length - 1, count = 0; i >= 0 && count < limit; i--, count++) {
+        var artistHistoryTile = document.createElement('a');
+        artistHistoryTile.setAttribute('class', 'display-flex artist-tile border-black');
+        artistHistoryTile.setAttribute('id', artistSearches[i].artist);
+        artistHistoryTile.setAttribute('href', '#');
+        artistHistoryTile.setAttribute('data-effect', 'hover-zoom-right');
+        artistHistoryTile.style.textDecoration = 'none';
+
+        var artistContainer = document.createElement('div');
+        artistContainer.setAttribute('class', 'artist-container');
+
+        var artistHistoryImg = document.createElement('img');
+        artistHistoryImg.setAttribute('class', 'tile-img slide-front');
+        artistHistoryImg.setAttribute('src', artistSearches[i].picture);
+
+        var artistHistoryName = document.createElement('h5');
+        artistHistoryName.setAttribute('class', 'artist-name slide-back p-2');
+        artistHistoryName.setAttribute('style', 'text-decoration:none !important; color: black; text-decoration-line: none;');
+        artistHistoryName.textContent = artistSearches[i].artist;
+        artistHistoryName.setAttribute('id', artistSearches[i].artist);
+
+        artistContainer.appendChild(artistHistoryImg);
+        artistContainer.appendChild(artistHistoryName);
+        artistHistoryTile.appendChild(artistContainer);
+        artistHistoryEl.appendChild(artistHistoryTile);
+
+        artistHistoryTile.addEventListener('click', function(event) {
+            event.preventDefault();
+            var artistSearch = event.target.id;
+            var queryString = '?artist=' + this.textContent;
+            history.pushState(null, '', queryString);
+
+            console.log('Similar Artist Search: ', artistSearch);
+            getParams();
+        });
+    }
+}
+
 function saveEventHistory(searchLocation, startDate, endDate) {
     var eventSearches = JSON.parse(localStorage.getItem('eventSearches')) || [];
     var eventSearch = {
@@ -361,11 +437,16 @@ function saveEventHistory(searchLocation, startDate, endDate) {
     console.log(eventSearches);
 }
 
-function saveArtistHistory(deezerArtistMatch) {
+function saveArtistHistory(artistName, artistPicture) {
     var artistSearches = JSON.parse(localStorage.getItem('artistSearches')) || [];
-    artistSearches.push(deezerArtistMatch);
+    var artistSearch = {
+        artist: artistName,
+        picture: artistPicture
+    }
+    artistSearches.push(artistSearch);
     localStorage.setItem('artistSearches', JSON.stringify(artistSearches));
     console.log(artistSearches);
+    readArtistHistory();
 }
 
 if (eventSearchBtn){
@@ -385,7 +466,6 @@ function getParams() {
         console.log(artistSearch);
     
         retrieveDeezerInfo(artistSearch);
-        saveArtistHistory(artistSearch);
     } else if (document.location.search.includes('searchlocation')) {
         var eventSearchArr = document.location.search.split('&');
     
@@ -400,5 +480,5 @@ function getParams() {
     }
 }
 
-
+readArtistHistory();
 getParams();
