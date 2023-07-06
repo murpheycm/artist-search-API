@@ -32,30 +32,6 @@ function saveSearch(event) {
 
 
   // function deezer(){
-    
-//     fetch('https://deezerdevs-deezer.p.rapidapi.com/search', {
-//       async: true,
-//       crossDomain: true,
-//       url : 'https://deezerdevs-deezer.p.rapidapi.com/search',
-//       method: "GET",
-//       headers: {
-//         'X-RapidAPI-Key': '1f74ad6fe1msh722b05fd40167f7p168350jsn83917ae41088',
-//         'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com',
-//         },
-//       data: {
-//         artistNameValue: 'q',
-//       }
-//     })
-//       .then(response => response.json())
-//       .then(data => {
-//         JSON.stringify(data);
-//         console.log(data);
-//       })
-//   };
-//   document.getElementById('artistBio').innerHTML = deezer();
-  
-// };
-  
   function deezer() {
     $.ajax({
       "async": true,
@@ -69,27 +45,24 @@ function saveSearch(event) {
       data: {
         'q': artistNameValue
       },
-
       success: function (result) {
         console.log(result.data);
       }
-      
     });
   }
   document.getElementById('artistBio').innerHTML = deezer();
-
+  
+  //$.get('https://deezerdevs-deezer.p.rapidapi.com/search').then((data) => {
+      //   const artistInfo = $('#artistBio');
+      //   const artistData = data.name;
+      //   artistInfo.append(artistData);
+      // }).catch ((error) => {
+      //     artistInfo.append(error.statusText);
+      // })
+  
 };
 
 
-  //     return response.json();
-  //   }).then(data => {
-  //       console.log(data);
-  // })
-  // .catch(error => {
-  //     console.log(error);
-  // })
-//   userSearchText = localStorage.getItem("artistName");
-// }
 
 
 
