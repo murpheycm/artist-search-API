@@ -272,11 +272,16 @@ function printTourDates(tourDates) {
         }
         tourDateAttrEl.textContent = tourDateAttrEl.textContent.slice(0, -2);
         tourDateTicketBtn.textContent = 'Get Tickets';
+
+        (function(url) {
+            tourDateTicketBtn.addEventListener('click', function() {
+                window.open(url, '_blank');
+            });
+        })(tourDateTicketUrl);
+
         tourDateEl.setAttribute('class', 'tour-date-el border-bottom border-size-2 bd-gray py-2');
-        tourDateTicketBtn.setAttribute('href', tourDateTicketUrl);
 
-
-        // tourDateEl.appendChild(tourDateNameEl);
+        tourDateEl.appendChild(tourDateNameEl);
         tourDateEl.appendChild(tourDateLocEl);
         tourDateEl.appendChild(tourDateTimeEl);
         tourDateEl.appendChild(tourDateAttrEl);
