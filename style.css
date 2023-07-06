@@ -1,14 +1,17 @@
 /* Styling the searchpage.html columns and tiles*/
 .column.side {
     width: 25%;
+    
 }
 .column.main {
     width:75%
+    
 }
 
 #similarArtists {
     display: flex;
     text-align: center;
+        
 }
 .artistTile {
     margin-right: 15px
@@ -38,8 +41,28 @@
     transform: scale(1.1);
 }
 
+
 .artist-details {
     display: flex;
     justify-content: space-between;
     margin-bottom: 2px;
 }
+  .artist-name {
+    text-decoration: none;
+    color: inherit;
+  }
+
+.mx-auto {
+    background-color: lightgray;
+}
+.results.row.flex-justify-around{
+    background-color: beige;
+}
+.clear{
+    background-color: lightblue;
+}
+.card.p-3{
+    background-color: whitesmoke;
+    position: absolute;
+}
+
