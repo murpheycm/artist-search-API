@@ -21,3 +21,7 @@
 .artist-tile {
     border-radius: 50%;
 }
+
+.similar-artist-img:hover {
+    filter: brightness(50%);
+}
