@@ -31,6 +31,7 @@ function saveSearch(event) {
   event.preventDefault();
 
 
+<<<<<<< HEAD:searchpage/searchpage.js
   
 //   function deezer() {
 //     var test = $.ajax({
@@ -97,6 +98,40 @@ function saveSearch(event) {
   // })
 //   userSearchText = localStorage.getItem("artistName");
 // }
+=======
+  // function deezer(){
+  function deezer() {
+    $.ajax({
+      "async": true,
+      "crossDomain": true,
+      "url":'https://deezerdevs-deezer.p.rapidapi.com/search',
+      "method": "GET",
+      "headers": {
+        'X-RapidAPI-Key': '1f74ad6fe1msh722b05fd40167f7p168350jsn83917ae41088',
+        'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com',
+        },
+      data: {
+        'q': artistNameValue
+      },
+      success: function (result) {
+        console.log(result.data);
+      }
+    });
+  }
+  document.getElementById('artistBio').innerHTML = deezer();
+  
+  //$.get('https://deezerdevs-deezer.p.rapidapi.com/search').then((data) => {
+      //   const artistInfo = $('#artistBio');
+      //   const artistData = data.name;
+      //   artistInfo.append(artistData);
+      // }).catch ((error) => {
+      //     artistInfo.append(error.statusText);
+      // })
+  
+};
+
+
+>>>>>>> 4f2393f13a9a95edf00f5c5e783150f314a70447:searchpage.js
 
 
 
