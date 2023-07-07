@@ -391,7 +391,7 @@ function renderArtistHistory(artistSearches) {
         artistHistoryTile.setAttribute('class', 'artist-tile hover-effect');
         artistHistoryTile.setAttribute('id', artistSearches[i].artist);
         artistHistoryTile.setAttribute('href', '#');
-        artistHistoryTile.setAttribute('data-effect', 'hover-zoom-right');
+        // artistHistoryTile.setAttribute('data-effect', 'hover-zoom-right');
         artistHistoryTile.style.textDecoration = 'none';
 
         var artistContainer = document.createElement('div');
@@ -402,7 +402,7 @@ function renderArtistHistory(artistSearches) {
         artistHistoryImg.setAttribute('src', artistSearches[i].picture);
 
         var artistHistoryName = document.createElement('h5');
-        artistHistoryName.setAttribute('class', 'artist-name cell-8 pl-4');
+        artistHistoryName.setAttribute('class', 'artist-name cell-6 pl-4');
         artistHistoryName.setAttribute('style', 'text-decoration:none !important; color: black; text-decoration-line: none;');
         artistHistoryName.textContent = artistSearches[i].artist;
         artistHistoryName.setAttribute('id', artistSearches[i].artist);
