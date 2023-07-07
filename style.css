@@ -1,6 +1,7 @@
 /* Styling the searchpage.html columns and tiles*/
 .column.side {
     width: 25%;
+    background-color: lightgray;
     
 }
 .column.main {
@@ -53,15 +54,15 @@
   }
 
 .mx-auto {
-    background-color: lightgray;
+    background-color: darkgrey;
 }
-.results.row.flex-justify-around{
-    background-color: beige;
-}
-.clear{
-    background-color: lightblue;
-}
+
 .card.p-3{
-    background-color: whitesmoke;
+    background-color: lightgray;
+    border-color: lightgray;
+}
+.nameplaylist{
+    background-color: rgb(25, 25, 25);
+    color: white;
 }
 
