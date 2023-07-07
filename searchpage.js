@@ -388,7 +388,7 @@ function renderArtistHistory(artistSearches) {
 
     for (var i = 0; i < artistSearches.length; i++) {
         var artistHistoryTile = document.createElement('a');
-        artistHistoryTile.setAttribute('class', 'artist-tile');
+        artistHistoryTile.setAttribute('class', 'artist-tile hover-effect');
         artistHistoryTile.setAttribute('id', artistSearches[i].artist);
         artistHistoryTile.setAttribute('href', '#');
         artistHistoryTile.setAttribute('data-effect', 'hover-zoom-right');
