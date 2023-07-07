@@ -29,17 +29,23 @@ header {
 }
 
 #artist-search {
-    background-color: rgb(248, 247, 246);
+    background-color: rgb(235, 233, 231);
     color:black;
     justify-content: center;
-    padding: 10px;
-    width: 50%;
+    width: 45%;
     position:relative;
     margin-top: 50px;
 }
 
-input:focus {
-    border: 10px solid #555;
+#artist-search-form {
+    padding: 3px;
+    margin: 10px;
+}
+
+#artist-search-form:hover {
+    padding: 3px;
+    margin: 10px;
+    background-color: rgb(173, 172, 172);
 }
 
 #event-search-btn {
