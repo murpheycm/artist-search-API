@@ -54,10 +54,6 @@
     color: white !important;
 }
 
-.mx-auto {
-    background-color: darkgrey;
-}
-
 .card.p-3{
     background-color: lightgray;
     border-color: lightgray;
