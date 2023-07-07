@@ -384,24 +384,25 @@ function readArtistHistory() {
 
 function renderArtistHistory(artistSearches) {
     artistHistoryEl.innerHTML = '';
+    artistHistoryEl.setAttribute('class', 'grid')
 
     for (var i = 0; i < artistSearches.length; i++) {
         var artistHistoryTile = document.createElement('a');
-        artistHistoryTile.setAttribute('class', 'display-flex artist-tile border-black');
+        artistHistoryTile.setAttribute('class', 'artist-tile');
         artistHistoryTile.setAttribute('id', artistSearches[i].artist);
         artistHistoryTile.setAttribute('href', '#');
         artistHistoryTile.setAttribute('data-effect', 'hover-zoom-right');
         artistHistoryTile.style.textDecoration = 'none';
 
         var artistContainer = document.createElement('div');
-        artistContainer.setAttribute('class', ' display-flex artist-container');
+        artistContainer.setAttribute('class', 'row flex-align-center');
 
         var artistHistoryImg = document.createElement('img');
-        artistHistoryImg.setAttribute('class', 'tile-img slide-front');
+        artistHistoryImg.setAttribute('class', 'cell-4 tile-img py-2');
         artistHistoryImg.setAttribute('src', artistSearches[i].picture);
 
         var artistHistoryName = document.createElement('h5');
-        artistHistoryName.setAttribute('class', 'artist-name slide-back p-2');
+        artistHistoryName.setAttribute('class', 'artist-name cell-8 pl-4');
         artistHistoryName.setAttribute('style', 'text-decoration:none !important; color: black; text-decoration-line: none;');
         artistHistoryName.textContent = artistSearches[i].artist;
         artistHistoryName.setAttribute('id', artistSearches[i].artist);
