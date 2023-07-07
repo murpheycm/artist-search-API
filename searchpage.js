@@ -18,6 +18,7 @@ var startDateEl = document.getElementById('start-date');
 var artistSearchEl = document.getElementById('search-artist-input');
 var similarArtistTiles = document.querySelectorAll('.artist-tile')
 var artistHistoryEl = document.getElementById('artist-history');
+
 // Function to retrieve artist information
 function retrieveDeezerInfo(artistSearch) {
     var deezerSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=artist:"' + artistSearch + '"';
@@ -29,11 +30,19 @@ function retrieveDeezerInfo(artistSearch) {
         .then(function(result) {
             console.log(result);
   
-        var deezerArtistMatch = result.data.find(function(artist) {
-            var decodedSearch = decodeURIComponent(artistSearch).toLowerCase();
-            var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase();
-            return decodedSearch.includes(decodedArtistName);
-        });
+            var deezerArtistMatch = result.data.find(function(artist) {
+                var decodedSearch = decodeURIComponent(artistSearch).toLowerCase().replace(/[^\w\s-]/g, '');
+                var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase().replace(/[^\w\s-]/g, '');
+
+                var searchWords = decodedSearch.split(/\s+/);
+                var artistWords = decodedArtistName.split(/\s+/);
+
+                return searchWords.every(function(word) {
+                    return artistWords.some(function(artistWord) {
+                        return artistWord.includes(word);
+                    });
+                });
+            });
   
         if (deezerArtistMatch) {
             console.log('It works!');
@@ -400,7 +409,7 @@ function renderArtistHistory(artistSearches) {
         artistHistoryTile.setAttribute('class', 'artist-tile hover-effect');
         artistHistoryTile.setAttribute('id', artistSearches[i].artist);
         artistHistoryTile.setAttribute('href', '#');
-        // artistHistoryTile.setAttribute('data-effect', 'hover-zoom-right');
+        artistHistoryTile.setAttribute('data-effect', 'hover-zoom-right');
         artistHistoryTile.style.textDecoration = 'none';
 
         var artistContainer = document.createElement('div');
@@ -411,7 +420,6 @@ function renderArtistHistory(artistSearches) {
         artistHistoryImg.setAttribute('src', artistSearches[i].picture);
 
         var artistHistoryName = document.createElement('h5');
-
         artistHistoryName.setAttribute('class', 'artist-history-name cell-8 pl-4');
         artistHistoryName.setAttribute('style', 'text-decoration:none !important; color: black; text-decoration-line: none;');
         artistHistoryName.textContent = artistSearches[i].artist;
