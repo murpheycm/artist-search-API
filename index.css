@@ -50,11 +50,13 @@ header {
 
 #event-search-btn {
     background-color: rgb(188, 119, 24);
+    color: white;
 }
 
 #event-search-btn:hover {
     background-color: rgb(1, 17, 31);
-    transform: scale(1.1)
+    transform: scale(1.1);
+    color: white;
 }
 
 a:link {
