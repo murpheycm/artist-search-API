@@ -30,11 +30,19 @@ function retrieveDeezerInfo(artistSearch) {
         .then(function(result) {
             console.log(result);
   
-        var deezerArtistMatch = result.data.find(function(artist) {
-            var decodedSearch = decodeURIComponent(artistSearch).toLowerCase();
-            var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase();
-            return decodedSearch.includes(decodedArtistName);
-        });
+            var deezerArtistMatch = result.data.find(function(artist) {
+                var decodedSearch = decodeURIComponent(artistSearch).toLowerCase().replace(/[^\w\s-]/g, '');
+                var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase().replace(/[^\w\s-]/g, '');
+
+                var searchWords = decodedSearch.split(/\s+/);
+                var artistWords = decodedArtistName.split(/\s+/);
+
+                return searchWords.every(function(word) {
+                    return artistWords.some(function(artistWord) {
+                        return artistWord.includes(word);
+                    });
+                });
+            });
   
         if (deezerArtistMatch) {
             console.log('It works!');
