@@ -30,11 +30,19 @@ function retrieveDeezerInfo(artistSearch) {
         .then(function(result) {
             console.log(result);
   
-        var deezerArtistMatch = result.data.find(function(artist) {
-            var decodedSearch = decodeURIComponent(artistSearch).toLowerCase();
-            var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase();
-            return decodedSearch.includes(decodedArtistName);
-        });
+            var deezerArtistMatch = result.data.find(function(artist) {
+                var decodedSearch = decodeURIComponent(artistSearch).toLowerCase().replace(/[^\w\s-]/g, '');
+                var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase().replace(/[^\w\s-]/g, '');
+
+                var searchWords = decodedSearch.split(/\s+/);
+                var artistWords = decodedArtistName.split(/\s+/);
+
+                return searchWords.every(function(word) {
+                    return artistWords.some(function(artistWord) {
+                        return artistWord.includes(word);
+                    });
+                });
+            });
   
         if (deezerArtistMatch) {
             console.log('It works!');
@@ -84,10 +92,19 @@ function printDeezerInfo(artist) {
     var artistId = artist.id;
     var artistPicture = artist.picture;
     var artistLink = artist.link;
+    var overlayImgPic = artist.picture_big;
     console.log(artistId, artistPicture, artistLink);
     
     var artistPlaylistUrl = 'https://widget.deezer.com/widget/dark/artist/' + artistId + '/top_tracks';
     document.getElementById('artist-playlist').src = artistPlaylistUrl;
+
+    var mainDiv = document.querySelector('.main');
+    if (overlayImgPic) {
+        mainDiv.style.backgroundImage = `linear-gradient(90deg, rgba(25, 25, 25, 1), rgba(0, 0, 0, 0.7)), url('${overlayImgPic}')`;
+        mainDiv.style.backgroundRepeat = 'no-repeat';
+        mainDiv.style.backgroundSize = '500px';
+        mainDiv.style.backgroundPosition = 'top right';
+    }
   
     var artistHeaderCard = document.createElement('div');
     var artistHeaderName = document.createElement('h1');
@@ -403,7 +420,7 @@ function renderArtistHistory(artistSearches) {
         artistHistoryImg.setAttribute('src', artistSearches[i].picture);
 
         var artistHistoryName = document.createElement('h5');
-        artistHistoryName.setAttribute('class', 'artist-name cell-8 pl-4');
+        artistHistoryName.setAttribute('class', 'artist-history-name cell-8 pl-4');
         artistHistoryName.setAttribute('style', 'text-decoration:none !important; color: black; text-decoration-line: none;');
         artistHistoryName.textContent = artistSearches[i].artist;
         artistHistoryName.setAttribute('id', artistSearches[i].artist);

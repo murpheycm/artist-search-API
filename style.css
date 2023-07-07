@@ -149,8 +149,15 @@ a:hover {
 
 .artist-name {
     text-decoration: none;
-    color: white;
+    color: white !important;
 }
 
+.card.p-3{
+    background-color: lightgray;
+    border-color: lightgray;
+}
 
-
+.main{
+    background-color: rgb(25, 25, 25);
+    color: white;
+}
