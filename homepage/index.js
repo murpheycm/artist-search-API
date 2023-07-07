@@ -1,3 +1,4 @@
+
 var eventSearchBtn = document.querySelector('#event-search-btn');
 var artistSearchForm = document.querySelector('#artist-search form');
 var locationEl = document.getElementById('location-input');

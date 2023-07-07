@@ -5,19 +5,67 @@ body {
 /* Styling the searchpage.html columns and tiles*/
 .column.side {
     width: 25%;
+    
 }
 .column.main {
     width:75%
+    
 }
 
 #similarArtists {
     display: flex;
     text-align: center;
+        
 }
 .artistTile {
     margin-right: 15px
 }
 
-#search-input, #userSearchInput{
-    text-transform: uppercase;
+.header-picture {
+    border-radius: 50%;
 }
+
+.tile-img {
+    border-radius: 50%;
+}
+
+.similar-artist-img:hover {
+    filter: brightness(50%);
+}
+
+.tour-date-el {
+    list-style-type: none;
+}
+
+.hover-effect {
+    transition: transform 0.3s;
+  }
+  
+.hover-effect:hover {
+    transform: scale(1.1);
+}
+
+
+.artist-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
+  .artist-name {
+    text-decoration: none;
+    color: inherit;
+  }
+
+.mx-auto {
+    background-color: lightgray;
+}
+.results.row.flex-justify-around{
+    background-color: beige;
+}
+.clear{
+    background-color: lightblue;
+}
+.card.p-3{
+    background-color: whitesmoke;
+}
+
