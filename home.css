@@ -1,0 +1,19 @@
+/* Home page styling */
+.homeHeader {
+    text-align: center;
+}
+
+.hero-image {
+    background-image: url("https://cdn.pixabay.com/index/2023/04/18/04-44-42-402_1440x550.jpg");
+    /* background-image: url('https://www.lantyzhang.com/wp-content/uploads/2022/04/GrooveArmada-0409-Manchester-Show-LANTY-009-800x533.jpg'); */
+    height: 100%;
+    width: 100%;
+    background-position: center;
+    background-repeat:no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+#artistSearch {
+    position: absolute;
+}
