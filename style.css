@@ -57,12 +57,9 @@
     background-color: darkgrey;
 }
 
-.clear{
-    background-color: silver;
-    
-}
 .card.p-3{
-    background-color: whitesmoke;
+    background-color: lightgray;
+    border-color: lightgray;
 }
 .nameplaylist{
     background-color: rgb(25, 25, 25);
