@@ -1,24 +1,47 @@
-.main{
+body {
     background-color: rgb(25, 25, 25);
-    color: white;
 }
 
 header {
     background-color: rgb(25, 25, 25);
     width: 100%;
-    margin: 20px 0px 0px 15px;
+    display: flex;
+    top:0;
+    position:sticky;
+    z-index: 100;
+}
+
+/* #sticky{
+    position:sticky;
+    top:0;
+    z-index: 100;
+} */
+
+.card{
+    background-color: rgb(25, 25, 25);
+    color: white;
+    position: relative;
+    width: 50%;
+    top:0
 }
 
 .column.side {
-    width: 20%;
-    height: auto;
+    width: 25%;
     background-color: rgb(25, 25, 25);
+    color: white;
+    margin: 50px 0px 0px 0px;
+    justify-content: center;
+}
+
+.column.side h2 {
+    margin: 0px 0px 0px 10px;
 }
 
 
 .column.main {
-    width:80%;
+    width:75%;
     background-color: rgb(25, 25, 25);
+    color: white;
 }
 
 .column.main-A {
@@ -34,19 +57,6 @@ h2 {
     padding: 5px;
     text-align: left;
 } 
-
-#sticky{
-    position:sticky;
-    top:0;
-    z-index: 100;
-}
-
-.card{
-    background-color: rgb(25, 25, 25);
-    color: white;
-    border-color: lightgray;
-    justify-content: left;
-}
 
 #artist-search-btn {
     padding: 5px;
@@ -72,9 +82,14 @@ h2 {
     transform: scale(1.1)
 }
 
+#artist-history{
+    color: white;
+    margin: 20px;
+}
+
 
 #resultsSection{
-    margin: 100px 50px 0px 50px;
+    margin: 50px 50px 0px 50px;
 }
 
 .header-picture {
@@ -150,11 +165,6 @@ a:hover {
 .artist-name {
     text-decoration: none;
     color: white !important;
-}
-
-.card.p-3{
-    background-color: lightgray;
-    border-color: lightgray;
 }
 
 .main{
