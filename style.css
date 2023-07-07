@@ -53,15 +53,11 @@
     color: inherit;
   }
 
-.mx-auto {
-    background-color: darkgrey;
-}
-
 .card.p-3{
     background-color: lightgray;
     border-color: lightgray;
 }
-.nameplaylist{
+.main{
     background-color: rgb(25, 25, 25);
     color: white;
 }
