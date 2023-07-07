@@ -316,13 +316,15 @@ function printTourDates(tourDates) {
         console.log(tourDateName, tourDate, tourDateLocation, tourDateAttrArray, tourDateTicketUrl);
     
         var tourDateEl = document.createElement('li');
-        var tourDateNameEl = document.createElement('p');
+        var tourDateNameEl = document.createElement('h2');
         var tourDateLocEl = document.createElement('p');
         var tourDateTimeEl = document.createElement('p');
         var tourDateAttrEl = document.createElement('p');
         var tourDateTicketBtn = document.createElement('button');
   
         tourDateNameEl.textContent = tourDateName;
+        tourDateEl.setAttribute('class', 'pt-6');
+        tourDateNameEl.setAttribute('class', 'secondary');
         tourDateLocEl.textContent = tourDateLocation.tourDateVenue + ', ' + tourDateLocation.tourDateCity + ', ' + tourDateLocation.tourDateCountry;
         tourDateTimeEl.textContent = tourDate;
         tourDateAttrEl.textContent = 'Attractions: ';
