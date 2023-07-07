@@ -18,7 +18,6 @@ var startDateEl = document.getElementById('start-date');
 var artistSearchEl = document.getElementById('search-artist-input');
 var similarArtistTiles = document.querySelectorAll('.artist-tile')
 var artistHistoryEl = document.getElementById('artist-history');
-var overlayImg = document.querySelector('.img-overlay');
 
 // Function to retrieve artist information
 function retrieveDeezerInfo(artistSearch) {
