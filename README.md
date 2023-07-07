@@ -3,8 +3,8 @@ A music app that allows users to search for artists of interest and view similar
 
 # User Story
 * As a music lover,
-* I want to be able to look up an artist and know when they are in town.
-* So that I can plan accordingly.
+** I want to be able to look up an artist and know when they are in town.
+** So that I can plan accordingly.
 
 * As a music lover,
 * I want to look up an artist and receive similar artists and find out when they are in town,
