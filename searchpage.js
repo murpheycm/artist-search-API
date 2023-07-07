@@ -20,7 +20,7 @@ var similarArtistTiles = document.querySelectorAll('.artist-tile')
 var artistHistoryEl = document.getElementById('artist-history');
 // Function to retrieve artist information
 function retrieveDeezerInfo(artistSearch) {
-    var deezerSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + artistSearch;
+    var deezerSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=artist:"' + artistSearch + '"';
   
     fetch(deezerSearchUrl, deezerOptions)
         .then(function(response) {
@@ -32,7 +32,7 @@ function retrieveDeezerInfo(artistSearch) {
         var deezerArtistMatch = result.data.find(function(artist) {
             var decodedSearch = decodeURIComponent(artistSearch).toLowerCase();
             var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase();
-            return decodedSearch === decodedArtistName;
+            return decodedSearch.includes(decodedArtistName);
         });
   
         if (deezerArtistMatch) {
@@ -346,7 +346,7 @@ function handleEventSearch(event) {
         return;
     }
 
-    var queryString = './searchpage.html?searchlocation=' + searchLocation + '&startdate=' + startDate + '&enddate=' + endDate;
+    var queryString = './searchpage.html?searchlocation=' + encodeURIComponent(searchLocation) + '&startdate=' + encodeURIComponent(startDate) + '&enddate=' + encodeURIComponent(endDate);
     location.assign(queryString);
     locationEl.value = '';
     startDateEl.value = '';
@@ -363,13 +363,13 @@ function handleArtistSearch(event) {
         return;
     }
   
-    var queryString = './searchpage.html?artist=' + artistSearch;
+    var queryString = './searchpage.html?artist=' + encodeURIComponent(artistSearch);
   
     localStorage.setItem('artistSearch', artistSearch);
     location.assign(queryString);
   
     artistSearchEl.value = '';
-  }
+}
 
 function readArtistHistory() {
     var artistSearches = localStorage.getItem('artistSearches');
@@ -384,26 +384,25 @@ function readArtistHistory() {
 
 function renderArtistHistory(artistSearches) {
     artistHistoryEl.innerHTML = '';
+    artistHistoryEl.setAttribute('class', 'grid')
 
-    var limit = Math.min(8, artistSearches.length);
-
-    for (var i = artistSearches.length - 1, count = 0; i >= 0 && count < limit; i--, count++) {
+    for (var i = 0; i < artistSearches.length; i++) {
         var artistHistoryTile = document.createElement('a');
-        artistHistoryTile.setAttribute('class', 'display-flex artist-tile border-black');
+        artistHistoryTile.setAttribute('class', 'artist-tile hover-effect');
         artistHistoryTile.setAttribute('id', artistSearches[i].artist);
         artistHistoryTile.setAttribute('href', '#');
         artistHistoryTile.setAttribute('data-effect', 'hover-zoom-right');
         artistHistoryTile.style.textDecoration = 'none';
 
         var artistContainer = document.createElement('div');
-        artistContainer.setAttribute('class', 'artist-container');
+        artistContainer.setAttribute('class', 'row flex-align-center');
 
         var artistHistoryImg = document.createElement('img');
-        artistHistoryImg.setAttribute('class', 'tile-img slide-front');
+        artistHistoryImg.setAttribute('class', 'cell-4 tile-img py-2');
         artistHistoryImg.setAttribute('src', artistSearches[i].picture);
 
         var artistHistoryName = document.createElement('h5');
-        artistHistoryName.setAttribute('class', 'artist-name slide-back p-2');
+        artistHistoryName.setAttribute('class', 'artist-name cell-8 pl-4');
         artistHistoryName.setAttribute('style', 'text-decoration:none !important; color: black; text-decoration-line: none;');
         artistHistoryName.textContent = artistSearches[i].artist;
         artistHistoryName.setAttribute('id', artistSearches[i].artist);
@@ -438,15 +437,29 @@ function saveEventHistory(searchLocation, startDate, endDate) {
 }
 
 function saveArtistHistory(artistName, artistPicture) {
-    var artistSearches = JSON.parse(localStorage.getItem('artistSearches')) || [];
+    var artistSearches =
+        JSON.parse(localStorage.getItem('artistSearches')) || [];
     var artistSearch = {
         artist: artistName,
-        picture: artistPicture
+        picture: artistPicture,
+    };
+    var index = artistSearches.findIndex(
+        (search) => search.artist === artistName
+    );
+    if (index !== -1) {
+      artistSearches.splice(index, 1);
     }
-    artistSearches.push(artistSearch);
+  
+    artistSearches.unshift(artistSearch);
+  
+    var maxLength = 8;
+    if (artistSearches.length > maxLength) {
+        artistSearches = artistSearches.slice(0, maxLength);
+    }
+  
     localStorage.setItem('artistSearches', JSON.stringify(artistSearches));
     console.log(artistSearches);
-    readArtistHistory();
+    renderArtistHistory(artistSearches);
 }
 
 if (eventSearchBtn){
