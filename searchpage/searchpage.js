@@ -340,75 +340,144 @@ function handleEventSearch(event) {
     var startDate = startDateEl.value;
     var endDate = endDateEl.value;
 
-    locationEl.value = "";
-    startDateEl.value = "";
-    endDateEl.value = "";
+    if (!searchLocation || !startDate || !endDate) {
+        console.error('You need a search input value!');
+        alert('Please enter a Location, Start Date, and End Date!');
+        return;
+    }
 
-    return false;
-
-function handleArtistSearch(event) {
-
-    event.preventDefault();
-  
-    var artistSearch = artistSearchEl.value;
-    
-    saveArtistHistory(artistSearch);
-    retrieveArtistId(artistSearch);
-    
-    artistSearchEl.value = "";
-  
-    return false;
+    var queryString = './searchpage.html?searchlocation=' + searchLocation + '&startdate=' + startDate + '&enddate=' + endDate;
+    location.assign(queryString);
+    locationEl.value = '';
+    startDateEl.value = '';
+    endDateEl.value = '';
 }
 
-function saveEventHistory() {
+function handleArtistSearch(event) {
+    event.preventDefault();  
+    var artistSearch = artistSearchEl.value;
+  
+    if (!artistSearch) {
+        console.error('You need a search input value!');
+        alert('Please Enter an Artist');
+        return;
+    }
+  
+    var queryString = './searchpage.html?artist=' + artistSearch;
+  
+    localStorage.setItem('artistSearch', artistSearch);
+    location.assign(queryString);
+  
+    artistSearchEl.value = '';
+  }
+
+function readArtistHistory() {
+    var artistSearches = localStorage.getItem('artistSearches');
+    if (artistSearches) {
+        artistSearches = JSON.parse(artistSearches);
+        renderArtistHistory(artistSearches);
+    } else {
+        artistSearches = [];
+    }
+    return artistSearches;
+}
+
+function renderArtistHistory(artistSearches) {
+    artistHistoryEl.innerHTML = '';
+
+    var limit = Math.min(8, artistSearches.length);
+
+    for (var i = artistSearches.length - 1, count = 0; i >= 0 && count < limit; i--, count++) {
+        var artistHistoryTile = document.createElement('a');
+        artistHistoryTile.setAttribute('class', 'display-flex artist-tile border-black');
+        artistHistoryTile.setAttribute('id', artistSearches[i].artist);
+        artistHistoryTile.setAttribute('href', '#');
+        artistHistoryTile.setAttribute('data-effect', 'hover-zoom-right');
+        artistHistoryTile.style.textDecoration = 'none';
+
+        var artistContainer = document.createElement('div');
+        artistContainer.setAttribute('class', 'artist-container');
+
+        var artistHistoryImg = document.createElement('img');
+        artistHistoryImg.setAttribute('class', 'tile-img slide-front');
+        artistHistoryImg.setAttribute('src', artistSearches[i].picture);
+
+        var artistHistoryName = document.createElement('h5');
+        artistHistoryName.setAttribute('class', 'artist-name slide-back p-2');
+        artistHistoryName.setAttribute('style', 'text-decoration:none !important; color: black; text-decoration-line: none;');
+        artistHistoryName.textContent = artistSearches[i].artist;
+        artistHistoryName.setAttribute('id', artistSearches[i].artist);
+
+        artistContainer.appendChild(artistHistoryImg);
+        artistContainer.appendChild(artistHistoryName);
+        artistHistoryTile.appendChild(artistContainer);
+        artistHistoryEl.appendChild(artistHistoryTile);
+
+        artistHistoryTile.addEventListener('click', function(event) {
+            event.preventDefault();
+            var artistSearch = event.target.id;
+            var queryString = '?artist=' + this.textContent;
+            history.pushState(null, '', queryString);
+
+            console.log('Similar Artist Search: ', artistSearch);
+            getParams();
+        });
+    }
+}
+
+function saveEventHistory(searchLocation, startDate, endDate) {
     var eventSearches = JSON.parse(localStorage.getItem('eventSearches')) || [];
+    var eventSearch = {
+        searchLocation: searchLocation,
+        startDate: startDate,
+        endDate: endDate
+    };
     eventSearches.push(eventSearch);
     localStorage.setItem('eventSearches', JSON.stringify(eventSearches));
     console.log(eventSearches);
 }
 
-function saveArtistHistory() {
+function saveArtistHistory(artistName, artistPicture) {
     var artistSearches = JSON.parse(localStorage.getItem('artistSearches')) || [];
+    var artistSearch = {
+        artist: artistName,
+        picture: artistPicture
+    }
     artistSearches.push(artistSearch);
     localStorage.setItem('artistSearches', JSON.stringify(artistSearches));
     console.log(artistSearches);
-    retrieveArtistId(artistSearch);
-
+    readArtistHistory();
 }
 
-
+if (eventSearchBtn){
+    eventSearchBtn.addEventListener('click', handleEventSearch);
+    console.log(eventSearchBtn);
+  }
   
-//Event listener for search button
-if (eventSearchBtn) {
-  eventSearchBtn.addEventListener('click', handleEventSearch);
-  console.log(eventSearchBtn);
-}
-
 if (artistSearchForm) {
-  artistSearchForm.addEventListener('submit', handleArtistSearch);
-  console.log(artistSearchForm);
+    artistSearchForm.addEventListener('submit', handleArtistSearch);
+    console.log(artistSearchForm);
 }
 
 function getParams() {
-    console.log(document.location)
-    if (searchPageUrl.includes('artist')) {
-        var artistSearch = document.location.search.split('=');
+    console.log(document.location);
+    if (document.location.search.includes('artist')) {
+        var artistSearch = document.location.search.split('=').pop();
         console.log(artistSearch);
-
-        saveArtistHistory(artistSearch);
-    } else if (searchPageUrl.includes('searchlocation')) {
-        var eventSearch = document.location.search.split('&');
-
-        var searchLocation = eventSearch[0].split('=').pop();
-        var startDate = eventSearch[1].split('=').pop();
-        var endDate = eventSearch[2].split('=').pop();
-        console.log(eventSearch);
-
-        saveEventHistory(eventSearch);
+    
+        retrieveDeezerInfo(artistSearch);
+    } else if (document.location.search.includes('searchlocation')) {
+        var eventSearchArr = document.location.search.split('&');
+    
+        var searchLocation = eventSearchArr[0].split('=').pop();
+        var startDate = eventSearchArr[1].split('=').pop();
+        var endDate = eventSearchArr[2].split('=').pop();
+        console.log(eventSearchArr);
+    
+        saveEventHistory(searchLocation, startDate, endDate);
     } else {
         return;
     }
-    
 }
 
 readArtistHistory();

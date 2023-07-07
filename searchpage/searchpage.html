@@ -15,8 +15,12 @@
                     <div class="card p-3">
                         <form id="artist-search-form">
                             <label>Find an Artist's Music, Tour Dates, and Similar Artists</label>
-                            <input type="text" placeholder="Search Artist" data-role="input" data-search-button="true" id="search-artist-input">
+                            <input type="text" placeholder="Search Artist" data-role="input" id="search-artist-input">
+                            <button type="submit" class="button shadowed" id="artist-search-btn">Search</button>
                         </form>
+                    </div>
+                    <div id="artist-history" class="ml-3"></div>
+                    <div>
                         <form class="block" id="event-search">
                             <label>Pick a Date Range and Location</label>
                             <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="start-date"> to <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="end-date">
@@ -52,6 +56,7 @@
     
 
     <script src="https://cdn.korzh.com/metroui/v4.5.1/js/metro.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
     <script src="./searchpage.js"></script>
 
 </body>
