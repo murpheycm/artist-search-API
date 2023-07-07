@@ -18,6 +18,8 @@ var startDateEl = document.getElementById('start-date');
 var artistSearchEl = document.getElementById('search-artist-input');
 var similarArtistTiles = document.querySelectorAll('.artist-tile')
 var artistHistoryEl = document.getElementById('artist-history');
+var overlayImg = document.querySelector('.img-overlay');
+
 // Function to retrieve artist information
 function retrieveDeezerInfo(artistSearch) {
     var deezerSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=artist:"' + artistSearch + '"';
@@ -83,10 +85,19 @@ function printDeezerInfo(artist) {
     var artistId = artist.id;
     var artistPicture = artist.picture;
     var artistLink = artist.link;
+    var overlayImgPic = artist.picture_big;
     console.log(artistId, artistPicture, artistLink);
     
     var artistPlaylistUrl = 'https://widget.deezer.com/widget/dark/artist/' + artistId + '/top_tracks';
     document.getElementById('artist-playlist').src = artistPlaylistUrl;
+
+    var mainDiv = document.querySelector('.main');
+    if (overlayImgPic) {
+        mainDiv.style.backgroundImage = `linear-gradient(90deg, rgba(25, 25, 25, 1), rgba(0, 0, 0, 0.7)), url('${overlayImgPic}')`;
+        mainDiv.style.backgroundRepeat = 'no-repeat';
+        mainDiv.style.backgroundSize = '500px';
+        mainDiv.style.backgroundPosition = 'top right';
+    }
   
     var artistHeaderCard = document.createElement('div');
     var artistHeaderName = document.createElement('h1');
@@ -402,7 +413,7 @@ function renderArtistHistory(artistSearches) {
         artistHistoryImg.setAttribute('src', artistSearches[i].picture);
 
         var artistHistoryName = document.createElement('h5');
-        artistHistoryName.setAttribute('class', 'artist-name cell-8 pl-4');
+        artistHistoryName.setAttribute('class', 'artist-history-name cell-8 pl-4');
         artistHistoryName.setAttribute('style', 'text-decoration:none !important; color: black; text-decoration-line: none;');
         artistHistoryName.textContent = artistSearches[i].artist;
         artistHistoryName.setAttribute('id', artistSearches[i].artist);

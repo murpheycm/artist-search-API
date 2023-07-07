@@ -48,10 +48,11 @@
     justify-content: space-between;
     margin-bottom: 2px;
 }
-  .artist-name {
+
+.artist-name {
     text-decoration: none;
-    color: inherit;
-  }
+    color: white !important;
+}
 
 .mx-auto {
     background-color: darkgrey;
@@ -61,8 +62,8 @@
     background-color: lightgray;
     border-color: lightgray;
 }
-.nameplaylist{
+
+.main{
     background-color: rgb(25, 25, 25);
     color: white;
 }
-
