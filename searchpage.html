@@ -9,16 +9,14 @@
 </head>
 
 <body class="mx-auto">
-    <div class="row">
-        <div class="column side">
-            <section class="container" id="searchAside">
-                <div class="aside-heder">
-                    <img src="./logo2.png">
-                </div>
+    <section class="container" id="searchAside">
+        <div class="wrapper" id="sticky">
+            <header>
+                <a href="./index.html"><img src="./logo2.png"></a>
                 <div class="container" id="artist-search">
                     <div class="card w-100">
                         <form id="artist-search-form">
-                            <label>Find an Artist's Music, Tour Dates, and Similar Artists</label>
+                            <label>Search Artists' Music, Tour Dates, and Similar Artists</label>
                             <input type="text" placeholder="Search Artist" data-role="input" id="search-artist-input">
                             <button type="submit" class="button shadowed" id="artist-search-btn">Search</button>
                         </form>
@@ -31,33 +29,68 @@
                             </form>
                         </div> -->
                     </div>
-                    <div id="artist-history" class="ml-3"></div>
                 </div>
-            </section>
+            </header> 
         </div>
-    <div class="column main">
-            <section class="container" id="resultsSection">
-                <div id="resultsSummary">
-                    <div class="nameplaylist">
-                    <span id="artist-header"></span>
-                    <div class="playlist py-4">
-                        <iframe title="deezer-widget" width="70%" height="300" src='https://widget.deezer.com/widget/dark/artist/13/top_tracks' frameborder="0" allowtransparency="true" allow="encrypted-media; clipboard-write" id="artist-playlist"></iframe>
+    </section>
+    <div class="row">
+        <!-- <div class="column side"> -->
+            <!-- <section class="container" id="searchAside">
+                <div class="wrapper" id="sticky">
+                    <header>
+                        <a href="./index.html"><img src="./logo2.png"></a>
+                    </header> 
+                    <div class="container" id="artist-search">
+                        <div class="card p-3">
+                            <form id="artist-search-form">
+                                <label>Search Artists' Music, Tour Dates, and Similar Artists</label>
+                                <input type="text" placeholder="Search Artist" data-role="input" id="search-artist-input">
+                                <button type="submit" class="button shadowed" id="artist-search-btn">Search</button>
+                            </form>
+                            <div>
+                                <form class="block" id="event-search">
+                                    <label>Pick a Date Range and Location</label>
+                                    <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="start-date"> to <input type="text" data-role="calendarpicker"  data-dialog-mode="true" id="end-date">
+                                    <input type="text" placeholder="Zipcode or City, State" id="location-input">
+                                    <button class="button shadowed" id="event-search-btn">Find Events in my area</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            <div class="column side">
+                <h2>Search History</h2>
+                <div id="artist-history" class="ml-3"></div>
+            </div>
+            <!-- </section> -->
+        <!-- </div> -->
+        <div class="column main">
+            <section class="container" id="resultsSection"></section>
+                <div class="row">
+                    <div class="column main-A">
+                        <section class="container" id="resultsSection">
+                            <div id="resultsSummary">
+                                <div class="nameplaylist">
+                                    <span id="artist-header"></span>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="column main-B">
+                        <div class="playlist py-4">
+                            <iframe title="deezer-widget" width="80%" height="300" src='https://widget.deezer.com/widget/dark/artist/13/top_tracks' frameborder="0" allowtransparency="true" allow="encrypted-media; clipboard-write" id="artist-playlist"></iframe>
+                        </div>
                     </div>
                 </div>
-                    <div class="results" id="artist-bio">
-                    </div>
-                    <h2>Similar Artists</h2>
-                    <div class="results row flex-justify-around" id="similar-artists">
-                    </div>
+                <div class="results" id="artist-bio"></div>
+                <h2>Similar Artists</h2>
+                <div class="results row flex-justify-around" id="similar-artists"></div>
                     <h2>Tour Dates</h2>
                     <ul class="clear" id="tour-dates">
                     </ul>
-
                 </div>
             </section>
         </div>
     </div>
-    
 
     <script src="https://cdn.korzh.com/metroui/v4.5.1/js/metro.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
