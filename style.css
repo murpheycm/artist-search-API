@@ -1,35 +1,39 @@
 body {
-    background-color: rgb(25, 25, 25);
+    background-color: rgb(65, 64, 64);
 }
 
 header {
-    background-color: rgb(25, 25, 25);
+    background-color: rgb(65, 64, 64);
     width: 100%;
     display: flex;
     top:0;
-    position:sticky;
-    z-index: 100;
+    margin: 0;
+    position:fixed;
+    z-index: 2;
 }
 
-/* #sticky{
-    position:sticky;
-    top:0;
-    z-index: 100;
-} */
-
 .card{
-    background-color: rgb(25, 25, 25);
+    background-color: rgb(65, 64, 64);
     color: white;
-    position: relative;
-    width: 50%;
-    top:0
+    position: fixed;
+    width: 20%;
+    top:9.5%;
+    padding: 10px;
+    z-index: 2;
+}
+
+
+
+#sticky{
+    position:sticky;
+    z-index:1;
 }
 
 .column.side {
     width: 25%;
-    background-color: rgb(25, 25, 25);
+    background-color: rgb(65, 64, 64);
     color: white;
-    margin: 50px 0px 0px 0px;
+    margin: 300px 0px 0px 0px;
     justify-content: center;
 }
 
@@ -40,20 +44,12 @@ header {
 
 .column.main {
     width:75%;
-    background-color: rgb(25, 25, 25);
+    background-color: rgb(65, 64, 64);
     color: white;
 }
 
-.column.main-A {
-    width: 40%;
-}
-
-.column.main-B {
-    width: 60%;
-}
-
 h2 {
-    color: rgb(248, 199, 84);
+    color: rgb(101, 184, 252);
     padding: 5px;
     text-align: left;
 } 
@@ -61,8 +57,12 @@ h2 {
 #artist-search-btn {
     padding: 5px;
     margin: 10px 10px 10px 0px;
-    background-color:  rgb(188, 119, 24);
-    color: white;
+    background-color:  rgb(245, 244, 242);
+    color: black;
+}
+
+#artist-search-btn:hover {
+    transform: scale(1.1);
 }
 
 #event-search-btn {
@@ -70,11 +70,6 @@ h2 {
     margin: 10px 10px 10px 0px;
     background-color: rgb(188, 119, 24);
     color: white;
-}
-
-#artist-search-btn:hover {
-    background-color: rgb(1, 17, 31);
-    transform: scale(1.1)
 }
 
 #event-search-btn:hover {
@@ -87,30 +82,23 @@ h2 {
     margin: 20px;
 }
 
-
 #resultsSection{
-    margin: 50px 50px 0px 50px;
+    margin: 100px 50px 0px 50px;
 }
 
 .header-picture {
-    height: 40%;
-    width: 40%;
+    width: 25%;
     border-radius: 50%;
 }
 
-#artist-header{
-    width: 40%;
-    height: 40%;
-}
-
 .playlist {
-    top:20%;
+    position: relative;
 }
 
 #artist-bio{
-    margin: 100px 100px 50px 5px;
+    margin: 20px 100px 50px 5px;
     padding: 30px;
-    background-color: rgb(244, 200, 142);
+    background-color: rgb(253, 244, 232);
     color: black;
 }
 
@@ -132,12 +120,8 @@ a:hover {
     color: white;    
 }
 
-.similar-artist-img:hover {
-    filter: brightness(50%);
-}
-
 .artistTile {
-    margin-right: 15px
+    margin-right: 10px;
 }
 
 .tile-img {
@@ -148,12 +132,17 @@ a:hover {
     list-style-type: none;
 }
 
+#tour-dates{
+    width:57%;
+}
+
 .hover-effect {
-    transition: transform 0.3s;
+    transition: transform 0.5s;
   }
   
 .hover-effect:hover {
-    transform: scale(1.1);
+    transform: scale(0.9);
+    filter: opacity(70%);
 }
 
 .artist-details {
@@ -165,9 +154,4 @@ a:hover {
 .artist-name {
     text-decoration: none;
     color: white !important;
-}
-
-.main{
-    background-color: rgb(25, 25, 25);
-    color: white;
 }
