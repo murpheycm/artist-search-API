@@ -100,7 +100,7 @@ function printDeezerInfo(artist) {
 
     var mainDiv = document.querySelector('.main');
     if (overlayImgPic) {
-        mainDiv.style.backgroundImage = `linear-gradient(90deg, rgba(25, 25, 25, 1), rgba(0, 0, 0, 0.7)), url('${overlayImgPic}')`;
+        mainDiv.style.backgroundImage = `linear-gradient(90deg, rgba(65, 64, 64, 1), rgba(0, 0, 0, 0.7)), url('${overlayImgPic}')`;
         mainDiv.style.backgroundRepeat = 'no-repeat';
         mainDiv.style.backgroundSize = '500px';
         mainDiv.style.backgroundPosition = 'top right';
@@ -423,7 +423,7 @@ function renderArtistHistory(artistSearches) {
 
         var artistHistoryName = document.createElement('h5');
         artistHistoryName.setAttribute('class', 'artist-history-name cell-8 pl-4');
-        artistHistoryName.setAttribute('style', 'text-decoration:none !important; color: black; text-decoration-line: none;');
+        artistHistoryName.setAttribute('style', 'text-decoration:none !important; color: white; text-decoration-line: none;');
         artistHistoryName.textContent = artistSearches[i].artist;
         artistHistoryName.setAttribute('id', artistSearches[i].artist);
 

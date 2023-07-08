@@ -7,9 +7,8 @@ header {
     width: 100%;
     display: flex;
     top:0;
-    margin: 0;
     position:fixed;
-    z-index: 2;
+    z-index: 3;
 }
 
 .card{
@@ -17,21 +16,23 @@ header {
     color: white;
     position: fixed;
     width: 20%;
-    top:9.5%;
-    padding: 10px;
+    top: 10%;
+    left: 0;
+    padding: 4px 10px 10px 10px;
     z-index: 2;
 }
 
-
-
+form {
+    padding: 10px;
+}
 #sticky{
     position:sticky;
     z-index:1;
+    color: white;
 }
 
 .column.side {
     width: 25%;
-    background-color: rgb(65, 64, 64);
     color: white;
     margin: 300px 0px 0px 0px;
     justify-content: center;
@@ -44,12 +45,11 @@ header {
 
 .column.main {
     width:75%;
-    background-color: rgb(65, 64, 64);
     color: white;
 }
 
 h2 {
-    color: rgb(101, 184, 252);
+    color: rgb(155, 206, 248);
     padding: 5px;
     text-align: left;
 } 
@@ -87,7 +87,8 @@ h2 {
 }
 
 .header-picture {
-    width: 25%;
+    max-height: 25%;
+    max-width: 25%;
     border-radius: 50%;
 }
 
@@ -96,10 +97,11 @@ h2 {
 }
 
 #artist-bio{
-    margin: 20px 100px 50px 5px;
+    margin: 10px 0px;
     padding: 30px;
-    background-color: rgb(253, 244, 232);
+    background-color: rgb(245, 244, 242);
     color: black;
+    width:59%;
 }
 
 #artist-bio h2{
@@ -117,7 +119,8 @@ a:hover {
 #similar-artists {
     display: flex;
     text-align: center;
-    color: white;    
+    color: white;  
+    width: 59%;
 }
 
 .artistTile {
