@@ -105,7 +105,7 @@ function printDeezerInfo(artist) {
         mainDiv.style.backgroundSize = '500px';
         mainDiv.style.backgroundPosition = 'top right';
     }
-  
+
     var artistHeaderCard = document.createElement('div');
     var artistHeaderName = document.createElement('h1');
     var artistHeaderPicture = document.createElement('img');
@@ -208,7 +208,7 @@ function printLastInfo(artist) {
         similarArtistTile.addEventListener('click', function(event) {
             event.preventDefault();
             var artistSearch = event.target.id;
-            var queryString = '?artist=' + artistSearch;
+            var queryString = '?artist=' + encodeURIComponent(artistSearch);
             history.pushState(null, '', queryString);
 
             console.log('Similar Artist Search: ', artistSearch);
@@ -353,25 +353,25 @@ function printTourDates(tourDates) {
     }
   }
 
-function handleEventSearch(event) {
-    event.preventDefault();
+// function handleEventSearch(event) {
+//     event.preventDefault();
 
-    var searchLocation = locationEl.value;
-    var startDate = startDateEl.value;
-    var endDate = endDateEl.value;
+//     var searchLocation = locationEl.value;
+//     var startDate = startDateEl.value;
+//     var endDate = endDateEl.value;
 
-    if (!searchLocation || !startDate || !endDate) {
-        console.error('You need a search input value!');
-        alert('Please enter a Location, Start Date, and End Date!');
-        return;
-    }
+//     if (!searchLocation || !startDate || !endDate) {
+//         console.error('You need a search input value!');
+//         alert('Please enter a Location, Start Date, and End Date!');
+//         return;
+//     }
 
-    var queryString = './searchpage.html?searchlocation=' + encodeURIComponent(searchLocation) + '&startdate=' + encodeURIComponent(startDate) + '&enddate=' + encodeURIComponent(endDate);
-    location.assign(queryString);
-    locationEl.value = '';
-    startDateEl.value = '';
-    endDateEl.value = '';
-}
+//     var queryString = './searchpage.html?searchlocation=' + encodeURIComponent(searchLocation) + '&startdate=' + encodeURIComponent(startDate) + '&enddate=' + encodeURIComponent(endDate);
+//     location.assign(queryString);
+//     locationEl.value = '';
+//     startDateEl.value = '';
+//     endDateEl.value = '';
+// }
 
 function handleArtistSearch(event) {
     event.preventDefault();  
@@ -435,7 +435,7 @@ function renderArtistHistory(artistSearches) {
         artistHistoryTile.addEventListener('click', function(event) {
             event.preventDefault();
             var artistSearch = event.target.id;
-            var queryString = '?artist=' + this.textContent;
+            var queryString = '?artist=' + encodeURIComponent(this.textContent);
             history.pushState(null, '', queryString);
 
             console.log('Similar Artist Search: ', artistSearch);
