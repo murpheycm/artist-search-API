@@ -126,12 +126,12 @@ function printSearchArr(topMatches) {
         artistSearchTile.style.textDecoration = 'none';
 
         var artistSearchImg = document.createElement('img');
-        artistSearchImg.setAttribute('class', 'tile-img slide-front');
+        artistSearchImg.setAttribute('class', 'tile-img slide-front mt-10');
         artistSearchImg.setAttribute('src', artistSearch.picture_medium);
         artistSearchImg.setAttribute('id', artistSearch.name);
 
         var artistSearchName = document.createElement('h5');
-        artistSearchName.setAttribute('class', 'artist-name slide-back text-center p-4');
+        artistSearchName.setAttribute('class', 'artist-name slide-back text-center p-2');
         artistSearchName.setAttribute('style', 'text-decoration:none !important; color: black; text-decoration-line: none;');
         artistSearchName.textContent = artistSearch.name;
         artistSearchName.setAttribute('id', artistSearch);
