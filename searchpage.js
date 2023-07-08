@@ -463,10 +463,9 @@ function saveArtistHistory(artistName, artistPicture) {
         artist: artistName,
         picture: artistPicture,
     };
-    var index = artistSearches.findIndex(function(search) {
+    var index = artistSearches.findIndex(
         (search) => search.artist === artistName
-    });
-
+    );
     if (index !== -1) {
       artistSearches.splice(index, 1);
     }
