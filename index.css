@@ -11,12 +11,12 @@ header {
 
 .hero-image {
   background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url("https://w.forfun.com/fetch/b8/b8961521ef4b968c5c4ee19f7daefcee.jpeg");
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  /* position: relative; */
+  position: relative;
 }
 
 .hero-text {
@@ -68,7 +68,6 @@ header {
 
 .artist-name {
     text-decoration: none;
-    color: white !important;
 }
 
 .hover-effect {
