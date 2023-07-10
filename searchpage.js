@@ -452,13 +452,39 @@ function retrieveItunesLink(artistName) {
       artist.bio + '<br><br>' +
       'Wikipedia Bio: ' + artist.wikipediaBio + '<br><br>' +
       'Genre: ' + artist.genre + '<br>' +
-      'Listeners: ' + artist.listeners + '<br><br>' +
-      'Spotify: <a href="' + artist.spotifyLink + '">' + artist.spotifyLink + '</a><br>' +
-      'iTunes: <a href="' + artist.itunesLink + '">' + artist.itunesLink + '</a><br>' +
-      'Wikipedia: <a href="' + artist.wikipediaLink + '">' + artist.wikipediaLink + '</a>';
-  
+      'Listeners: ' + artist.listeners + '<br><br>';
+
+    var linkContainer = document.createElement('div');
+    linkContainer.classList.add('link-container'); // Add a class for flex layout
+
+    var spotifyLink = document.createElement('a');
+    spotifyLink.setAttribute('href', artist.spotifyLink);
+    spotifyLink.setAttribute('target', '_blank');
+    spotifyLink.setAttribute('title', 'Spotify');
+    spotifyLink.setAttribute('class', 'logo');
+    spotifyLink.innerHTML = '<i class="fab fa-spotify"></i>';
+
+    var itunesLink = document.createElement('a');
+    itunesLink.setAttribute('href', artist.itunesLink);
+    itunesLink.setAttribute('target', '_blank');
+    itunesLink.setAttribute('class','logo');
+    itunesLink.setAttribute('title', 'iTunes');
+    itunesLink.innerHTML = '<i class="fab fa-itunes"></i>';
+
+    var wikipediaLink = document.createElement('a');
+    wikipediaLink.setAttribute('href', artist.wikipediaLink);
+    wikipediaLink.setAttribute('target', '_blank');
+    wikipediaLink.setAttribute('title', 'Wikipedia');
+    wikipediaLink.setAttribute('class', 'logo')
+    wikipediaLink.innerHTML = '<i class="fab fa-wikipedia-w"></i>';
+
+    linkContainer.appendChild(spotifyLink);
+    linkContainer.appendChild(itunesLink);
+    linkContainer.appendChild(wikipediaLink);
+
     artistBioCard.appendChild(artistBioTitle);
     artistBioCard.appendChild(artistBio);
+    artistBioCard.appendChild(linkContainer);
   
     var artistBioEl = document.getElementById('artist-bio');
     if (artistBioEl) {

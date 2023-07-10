@@ -11,6 +11,17 @@ header {
     z-index: 3;
 }
 
+.link-container {
+    display: flex;
+    justify-content:end;
+    align-items: center;
+}
+
+.logo {
+    margin:10px;
+    width:20px;
+}
+
 .card{
     background-color: rgb(25, 25, 25);
     color: white;
@@ -22,9 +33,10 @@ header {
     z-index: 2;
 }
 
-form {
+.form {
     padding: 10px;
 }
+
 #sticky{
     position:sticky;
     z-index:1;
