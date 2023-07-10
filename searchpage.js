@@ -563,7 +563,7 @@ function retrieveItunesLink(artistName) {
   
   function retrieveLastFmArtistImage(artist, similarArtistsEl) {
     // Replace 'YOUR_LASTFM_API_KEY' with your actual Last.fm API key
-    var lastFmSearchUrl = `http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${encodeURIComponent(artist.name)}&api_key=${lastApiKey}&format=json`;
+    var lastFmSearchUrl = `https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${encodeURIComponent(artist.name)}&api_key=${lastApiKey}&format=json`;
   
     return fetch(lastFmSearchUrl)
       .then(function(response) {
