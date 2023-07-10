@@ -21,49 +21,54 @@ header {
 
 .hero-text {
   text-align: center;
-  position: fixed;
-  top: 40%;
+  position:relative;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   color: rgb(235, 233, 231);
 }
 
 #artist-search {
+    background-color: rgb(235, 233, 231);
     color:black;
     justify-content: center;
-    width: 110%;
-    position:fixed;
+    width: 45%;
+    /* position:relative; */
     margin-top: 50px;
 }
 
 #artist-search-form {
-    top: 50%;
     padding: 3px;
     margin: 10px;
 }
 
-#artist-search-btn {
-    margin: 10px 0 0 0;
-    background-color: rgb(225, 141, 24);
+#artist-search-form:hover {
+    padding: 3px;
+    margin: 10px;
+    background-color: rgb(173, 172, 172);
+}
+
+#event-search-btn {
+    background-color: rgb(188, 119, 24);
     color: white;
 }
 
-#artist-search-btn:hover {
+#event-search-btn:hover {
+    background-color: rgb(1, 17, 31);
     transform: scale(1.1);
-    background-color: rgb(91, 161, 242);
     color: white;
 }
 
-#artist-selection{
-    background-color: white;
-    margin:0;
+a:link {
+   color: white; 
+}
+
+a:link:hover {
+    color:white;
 }
 
 .tile-img {
-    max-width: 80%;
-    max-height: 80%;
     border-radius: 50%;
-    margin: 2px;
 }
 
 .artist-name {
@@ -71,9 +76,10 @@ header {
 }
 
 .hover-effect {
-    transition: transform 0.3s;
+    transition: transform 0.5s;
   }
   
 .hover-effect:hover {
     transform: scale(0.9);
+    filter: opacity(70%);
 }
