@@ -1,4 +1,3 @@
-var artistSearch = '';
 const lastApiKey = 'c023247640faedc6ce04a6fddaf22a29';
 const lastApiSecret = '2ea11c4880a7e5b4ac0f5545e0a61f7a';
 const lastMethod = 'artist.getInfo';
@@ -10,6 +9,8 @@ var deezerOptions = {
     'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
   }
 };
+const spotifyClientId = '676cb4ae768d4cd19ae9209e52d3eca3';
+const spotifySecret = '9c94680f82034896b6f228fbba603725';
 var eventSearchBtn = document.querySelector('#event-search-btn');
 var artistSearchForm = document.getElementById('artist-search-form');
 var locationEl = document.getElementById('location-input');
@@ -18,360 +19,713 @@ var startDateEl = document.getElementById('start-date');
 var artistSearchEl = document.getElementById('search-artist-input');
 var similarArtistTiles = document.querySelectorAll('.artist-tile')
 var artistHistoryEl = document.getElementById('artist-history');
+var tourDatesEl = document.getElementById('tour-date-wrapper');
 
 // Function to retrieve artist information
+function retrieveArtistInfo(artistSearch) {
+    var deezerPromise = retrieveDeezerInfo(artistSearch)
+        .catch(function(error) {
+            console.log('Error retrieving Deezer info:', error);
+            return null;
+        });
+
+    var lastFmPromise = retrieveLastFmInfo(artistSearch)
+        .catch(function(error) {
+            console.log('Error retrieving Last.fm info:', error);
+            return null;
+        });
+
+    var spotifyPromise = retrieveSpotifyInfo(artistSearch)
+        .catch(function(error) {
+            console.log('Error retrieving Spotify info:', error);
+            return null;
+        });
+
+    var wikipediaPromise = retrieveWikipediaInfo(artistSearch)
+        .catch(function(error) {
+            console.log('Error retrieving Wikipedia info:', error);
+            return null;
+        });
+
+    Promise.all([deezerPromise, lastFmPromise, spotifyPromise, wikipediaPromise])
+        .then(function(results) {
+            var artistData = {
+                deezer: results[0],
+                lastFm: results[1],
+                spotify: results[2],
+                wikipedia: results[3]
+            };
+
+            // Process artist data
+            console.log(artistData);
+            getArtistInfo(artistData);
+        })
+        .catch(function(error) {
+            console.log('Error retrieving Artist Information: ', error);
+        });
+}
+
 function retrieveDeezerInfo(artistSearch) {
+    console.log('Calling retrieveDeezerInfo');
     var deezerSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=artist:"' + artistSearch + '"';
   
-    fetch(deezerSearchUrl, deezerOptions)
+    return fetch(deezerSearchUrl, deezerOptions)
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error('Failed to retrieve Deezer info');
+            }
+            return response.json();
+        })
+        .then(function(result) {
+            console.log(result);
+            if (result.data && result.data.length > 0) {  
+                var deezerMatch = result.data.find(function(artist) {
+                    var decodedSearch = decodeURIComponent(artistSearch).toLowerCase().replace(/[^\w\s-]/g, '');
+                    var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase().replace(/[^\w\s-]/g, '');
+
+                    var searchWords = decodedSearch.split(/\s+/);
+                    var artistWords = decodedArtistName.split(/\s+/);
+
+                    return searchWords.every(function(word) {
+                        return artistWords.some(function(artistWord) {
+                            return artistWord.includes(word);
+                        });
+                    });
+                });
+  
+                if (deezerMatch) {
+                    console.log('Deezer Artist Match: ', deezerMatch.artist.name);
+                    return deezerMatch;
+                } else {
+                    console.log('Artist not found in Deezer');
+                    return null;
+                }
+            } else {
+                console.log('No data found in Deezer');
+                return null;
+            }
+        })
+        .catch(function(error) {
+            console.log('Error:', error);
+            return null;
+        });
+}
+
+function retrieveLastFmInfo(artistSearch) {
+    console.log('Calling retrieveLastFmInfo');
+    var lastUrl = 'http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=' + artistSearch + '&api_key=' + lastApiKey + '&format=json';
+
+    return fetch(lastUrl)
         .then(function(response) {
             return response.json();
         })
         .then(function(result) {
             console.log(result);
-  
-            var deezerArtistMatch = result.data.find(function(artist) {
+            if (result.artist) {
+                var lastFmMatch = result.artist;
                 var decodedSearch = decodeURIComponent(artistSearch).toLowerCase().replace(/[^\w\s-]/g, '');
-                var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase().replace(/[^\w\s-]/g, '');
+                var decodedArtistName = lastFmMatch.name.toLowerCase().replace(/[^\w\s-]/g, '');
 
                 var searchWords = decodedSearch.split(/\s+/);
                 var artistWords = decodedArtistName.split(/\s+/);
 
-                return searchWords.every(function(word) {
+                var match = searchWords.every(function(word) {
                     return artistWords.some(function(artistWord) {
                         return artistWord.includes(word);
                     });
                 });
-            });
-  
-        if (deezerArtistMatch) {
-            console.log('It works!');
-            console.log('Deezer Artist Match: ', deezerArtistMatch.artist.name);
-            var deezerArtistName = deezerArtistMatch.artist.name
-            printDeezerInfo(deezerArtistMatch.artist);
-            retrieveLastFmInfo(deezerArtistName);
-            getTourDates(deezerArtistName);
-        } else {
-            console.log('No artist found');
-            alert('Error: Artist not found');
-        }
-    })
-    .catch(function(error) {
-        console.log('Error:', error);
-        alert('An error occurred while retrieving Deezer artist information');
-    });
+
+                if (match) {
+                    console.log('Last.fm Artist Match:', lastFmMatch.name);
+                    return lastFmMatch;
+                } else {
+                    console.log('Artist not found in Last.fm');
+                    return null;
+                }
+            } else {
+                console.log('Artist not found in Last.fm');
+                return null;
+            }
+        })
+        .catch(function(error) {
+            console.log('Error:', error);
+            return null;
+        });
 }
 
-function retrieveLastFmInfo(name) {
-    var lastUrl = 'http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=' + name + '&api_key=' + lastApiKey + '&format=json';
-    console.log(name);
-    fetch(lastUrl)
+function retrieveSpotifyInfo(artistSearch) {
+    console.log('Calling retrieveSpotifyInfo');
+    var spotifyUrl = 'https://api.spotify.com/v1/search?q=' + artistSearch + '&type=artist';
+    const spotifyOptions = {
+        url: 'https://accounts.spotify.com/api/token',
+        headers: {
+            'Authorization': 'Basic ' + btoa(spotifyClientId + ':' + spotifySecret)
+        },
+        form: {
+            grant_type: 'client_credentials'
+        },
+        json: true
+    };
+
+    return fetch(spotifyOptions.url, {
+        method: 'POST',
+        headers: {
+            'Authorization': spotifyOptions.headers.Authorization
+        },
+        body: new URLSearchParams(spotifyOptions.form)
+    })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(tokenResponse) {
+            const token = tokenResponse.access_token;
+            const spotifySearchOptions = {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            };
+
+            return fetch(spotifyUrl, spotifySearchOptions)
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(result) {
+                    console.log(result);
+                    if (result.artists && result.artists.items.length > 0) {
+                        var spotifyMatch = result.artists.items.find(function(artist) {
+                            var decodedSearch = decodeURIComponent(artistSearch).toLowerCase().replace(/[^\w\s-]/g, '');
+                            var decodedArtistName = artist.name.toLowerCase().replace(/[^\w\s-]/g, '');
+
+                            var searchWords = decodedSearch.split(/\s+/);
+                            var artistWords = decodedArtistName.split(/\s+/);
+
+                            return searchWords.every(function(word) {
+                                return artistWords.some(function(artistWord) {
+                                    return artistWord.includes(word);
+                                });
+                            });
+                        });
+                        if (spotifyMatch) {
+                            console.log('Spotify Artist Match: ', spotifyMatch.name);
+                            return spotifyMatch;
+                        } else {
+                            console.log('Artist not found in Spotify');
+                            return null;
+                        }
+                    } else {
+                        console.log('Artist not found in Spotify');
+                        return null;
+                    }
+                })
+                .catch(function(error) {
+                    console.log('Spotify Error:', error);
+                    return null;
+                });
+        })
+        .catch(function(error) {
+            console.log('Spotify Error', error);
+            return null;
+        });
+}
+
+function getArtistSearchTerm(artistData) {
+    return (
+      artistData.spotify?.name ||
+      artistData.lastFm?.name ||
+      artistData.deezer?.name ||
+      null
+    );
+  }
+
+  function retrieveWikipediaInfo(artistSearch) {
+    console.log('Calling retrieveWikipediaInfo');
+    const wikipediaSearchUrl = `https://en.wikipedia.org/w/api.php?origin=*&action=query&format=json&list=search&srsearch=${encodeURIComponent(artistSearch)}`;
+
+    return fetch(wikipediaSearchUrl)
         .then(function(response) {
             return response.json();
         })
         .then(function(result) {
             console.log(result);
 
-            if (result.artist) {
-                console.log('Last FM artist found!');
-                console.log(result.artist.name);
-                printLastInfo(result.artist);
+            if (result.query && result.query.search && result.query.search.length > 0) {
+                const searchResults = result.query.search;
+
+                const match = searchResults.find((searchResult) =>
+                    searchResult.title.toLowerCase().includes(artistSearch.toLowerCase())
+                );
+
+                if (match) {
+                    console.log('Exact Wikipedia Match:', match.title);
+                    console.log('Snippet:', match.snippet);
+                    console.log('Link:', `https://en.wikipedia.org/wiki/${match.title}`);
+                    return{
+                        title: match.title,
+                        snippet: match.snippet,
+                        link: `https://en.wikipedia.org/wiki/${match.title}`
+                    }
+                } else {
+                    console.log('No exact Wikipedia match found');
+                }
             } else {
-                console.log('No Last FM artist info found');
-                alert('Error: Last FM info not found');
+                console.log('No Wikipedia search results found');
             }
         })
         .catch(function(error) {
-            console.log('last FM Error:', error);
-            alert('An error occurred while retrieving Last.FM data');
+            console.log('Wikipedia Error:', error);
+        });
+}
+  
+
+function getArtistInfo(artistData) {
+    console.log('Calling getArtistInfo');
+    var artist = {
+        name: getArtistName(artistData),
+        deezerId: getArtistId(artistData),
+        picture: getArtistPicture(artistData),
+        bio: getArtistBio(artistData),
+        wikipediaBio: '',
+        genre: getArtistGenre(artistData),
+        listeners: getArtistListeners(artistData),
+        similarArtists: getSimilarArtists(artistData),
+        spotifyLink: getSpotifyLink(artistData),
+        itunesLink: '',
+        wikipediaLink: ''
+    };
+
+    function getArtistName(artistData) {
+        return artistData.deezer?.name || artistData.lastFm?.name || artistData.spotify?.name || '';
+    }
+
+    function getArtistId(artistData) {
+        return artistData.deezer?.artist.id || '';
+    }
+
+    function getArtistPicture(artistData) {
+        if (artistData.deezer) {
+          return artistData.deezer.artist.picture_medium || '';
+        } else if (artistData.lastFm) {
+          return artistData.lastFm.artist.image?.pop()['#text'] || '';
+        } else if (artistData.spotify) {
+          return artistData.spotify.images[0]?.url || '';
+        } else {
+          return '';
+        }
+      }
+
+    function getArtistBio(artistData) {
+        return artistData.lastFm?.bio?.summary || '';
+    }
+
+    function getArtistGenre(artistData) {
+        return artistData.lastFm?.tags?.tag[0]?.name || artistData.spotify?.genres?.[0] || '';
+    }
+
+    function getArtistListeners(artistData) {
+        return artistData.lastFm?.stats?.listeners || artistData.spotify?.followers?.total || '';
+    }
+
+    function getSimilarArtists(artistData) {
+        var similarArtists = [];
+      
+        if (artistData.deezer?.similar?.artist) {
+            similarArtists = artistData.deezer.similar.artist;
+        } else if (artistData.lastFm?.similar?.artist) {
+            similarArtists = artistData.lastFm.similar.artist;
+        } else if (artistData.spotify?.similar?.artists?.items) {
+            similarArtists = artistData.spotify.similar.artists.items;
+        }
+        return similarArtists;
+    }
+
+    function getSpotifyLink(artistData) {
+        return artistData.spotify?.external_urls?.spotify || '';
+    }
+
+    function getItunesLink(artistData) {
+        const artistName = getArtistName(artistData);
+        if (artistName) {
+          return retrieveItunesLink(artistName);
+        }
+        return Promise.resolve(null);
+    }
+
+    var artistName = artist.name;
+    var artistPicture = artist.picture;
+    var artistGenre = artist.genre;
+    retrieveWikipediaInfo(artistName, artistGenre)
+        .then(function(wikipediaData) {
+            if (wikipediaData) {
+                artist.wikipediaBio = wikipediaData.snippet;
+                artist.wikipediaLink = wikipediaData.link;
+            }
+            return getItunesLink(artistData);
+        })
+            .then(function(itunesLink) {
+                artist.itunesLink = itunesLink;
+                console.log('artist array', artist);
+                saveArtistHistory(artistName, artistPicture);
+                retrieveTourDates(artist.name);
+                printArtistInfo(artist);
+        })
+        .catch(function(error) {
+            console.log('Error retrieving Wikipedia info:', error);
+            saveArtistHistory(artistName, artistPicture);
+            retrieveTourDates(artistName);
+            printArtistInfo(artist);
         });
 }
 
-function printDeezerInfo(artist) {
-    var artistName = artist.name;
-    var artistId = artist.id;
-    var artistPicture = artist.picture;
-    var artistLink = artist.link;
-    var overlayImgPic = artist.picture_big;
-    console.log(artistId, artistPicture, artistLink);
-    
-    var artistPlaylistUrl = 'https://widget.deezer.com/widget/dark/artist/' + artistId + '/top_tracks';
-    document.getElementById('artist-playlist').src = artistPlaylistUrl;
+function retrieveItunesLink(artistName) {
+    console.log('calling retrieveItunesLink');
+    const itunesSearchUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(artistName)}&entity=musicArtist&limit=1`;
+  
+    return fetch(itunesSearchUrl)
+      .then(function(response) {
+        console.log('itunes', response);
+        return response.json();
+      })
+      .then(function(result) {
+        if (result.results && result.results.length > 0) {
+          console.log('itunes result', result);
+          const artistResult = result.results[0];
+          const itunesLink = artistResult.artistLinkUrl;
+          return itunesLink;
+        } else {
+          console.log('No iTunes search results found');
+          return null;
+        }
+      })
+      .catch(function(error) {
+        console.log('iTunes Search Error:', error);
+        return null;
+      });
+  }
 
-    var mainDiv = document.querySelector('.main');
-    if (overlayImgPic) {
-        mainDiv.style.backgroundImage = `linear-gradient(90deg, rgba(65, 64, 64, 1), rgba(0, 0, 0, 0.7)), url('${overlayImgPic}')`;
-        mainDiv.style.backgroundRepeat = 'no-repeat';
-        mainDiv.style.backgroundSize = '500px';
-        mainDiv.style.backgroundPosition = 'top right';
-    }
-
+  function printArtistInfo(artist) {
     var artistHeaderCard = document.createElement('div');
     var artistHeaderName = document.createElement('h1');
     var artistHeaderPicture = document.createElement('img');
   
-    artistHeaderCard.setAttribute('class', 'row h-50 py-5 pr-10');
-    artistHeaderName.textContent = artistName;
-    artistHeaderName.setAttribute('class', 'text-uppercase leader ml-5');
-    artistHeaderPicture.setAttribute('class', 'header-picture');
-    artistHeaderPicture.setAttribute('src', artistPicture);
+    artistHeaderName.textContent = artist.name;
+    artistHeaderPicture.setAttribute('src', artist.picture);
   
     artistHeaderCard.appendChild(artistHeaderPicture);
     artistHeaderCard.appendChild(artistHeaderName);
   
     var artistHeaderEl = document.getElementById('artist-header');
-    artistHeaderEl.innerHTML = '';
+    if (artistHeaderEl) {
+      artistHeaderEl.innerHTML = '';
+      artistHeaderEl.appendChild(artistHeaderCard);
+    }
+
+    var mainDiv = document.querySelector('.main');
+    if (artist.picture) {
+      mainDiv.style.backgroundImage = `linear-gradient(90deg, rgba(25, 25, 25, 1), rgba(0, 0, 0, 0.7)), url('${artist.picture}')`;
+      mainDiv.style.backgroundRepeat = 'no-repeat';
+      mainDiv.style.backgroundSize = '600px';
+      mainDiv.style.backgroundPosition = 'top right';
+    }
   
-    artistHeaderEl.appendChild(artistHeaderCard);
+    var playlistEl = document.getElementById('playlist');
+  if (artist.deezerId) {
+    var deezerWidgetContainer = document.createElement('iframe');
+    deezerWidgetContainer.setAttribute('title', 'deezer-widget');
+    deezerWidgetContainer.setAttribute('width', '60%');
+    deezerWidgetContainer.setAttribute('height', '300');
+    deezerWidgetContainer.setAttribute('src', `https://widget.deezer.com/widget/dark/artist/${artist.deezerId}/top_tracks`);
+    deezerWidgetContainer.setAttribute('frameborder', '0');
+    deezerWidgetContainer.setAttribute('allowtransparency', 'true');
+    deezerWidgetContainer.setAttribute('allow', 'encrypted-media; clipboard-write');
+    deezerWidgetContainer.setAttribute('id', 'artist-playlist');
 
-    saveArtistHistory(artistName, artistPicture);
-}
-
-function printLastInfo(artist) {
-    var artistBioText = 'About ' + artist.name;
-    var artistBioContent = artist.bio.summary.split('<a')[0];
-    var artistBioLink = artist.bio.links.link.href;
-    var artistBioPub = artist.bio.published;
-    var artistGenre = artist.tags.tag[0].name;
-    var artistListeners = artist.stats.listeners;
-
+    playlistEl.innerHTML = '';
+    playlistEl.appendChild(deezerWidgetContainer);
+  }
+  
     var artistBioCard = document.createElement('div');
-    artistBioCard.setAttribute('class', '');
-
     var artistBioTitle = document.createElement('h2');
-    artistBioTitle.textContent = artistBioText;
-
+    artistBioTitle.textContent = 'About ' + artist.name;
+  
     var artistBio = document.createElement('p');
-    artistBio.textContent = artistBioContent;
-    artistBio.setAttribute('class', 'py-1');
-
-    var artistDetailsContainer = document.createElement('div');
-    artistDetailsContainer.setAttribute('class', 'artist-details');
-
-    var artistGenreInfo = document.createElement('span');
-    artistGenreInfo.innerHTML = 'Genre<br>' + artistGenre;
-
-    var artistListenersInfo = document.createElement('span');
-    artistListenersInfo.innerHTML = 'Listeners<br>' + artistListeners;
-
-    artistDetailsContainer.appendChild(artistGenreInfo);
-    artistDetailsContainer.appendChild(artistListenersInfo);
-
-    var artistBioUrlContainer = document.createElement('div');
-    artistBioUrlContainer.setAttribute('class', 'bio-url-container');
-    var artistBioUrl = document.createElement('a');
-    artistBioUrl.setAttribute('href', artistBioLink);
-    artistBioUrl.setAttribute('class', 'clear-bottom');
-    artistBioUrl.textContent = 'For the full bio on ' + artist.name + ' on Last.FM, click here.';
-    artistBioUrlContainer.appendChild(artistBioUrl);
-
+    artistBio.innerHTML =
+      artist.bio + '<br><br>' +
+      'Wikipedia Bio: ' + artist.wikipediaBio + '<br><br>' +
+      'Genre: ' + artist.genre + '<br>' +
+      'Listeners: ' + artist.listeners + '<br><br>' +
+      'Spotify: <a href="' + artist.spotifyLink + '">' + artist.spotifyLink + '</a><br>' +
+      'iTunes: <a href="' + artist.itunesLink + '">' + artist.itunesLink + '</a><br>' +
+      'Wikipedia: <a href="' + artist.wikipediaLink + '">' + artist.wikipediaLink + '</a>';
+  
     artistBioCard.appendChild(artistBioTitle);
     artistBioCard.appendChild(artistBio);
-    artistBioCard.appendChild(artistDetailsContainer);
-    artistBioCard.appendChild(artistBioUrlContainer);
-
+  
     var artistBioEl = document.getElementById('artist-bio');
-    artistBioEl.innerHTML = '';
-    artistBioEl.appendChild(artistBioCard);
-
-    var artistSimilarArr = artist.similar.artist;
-    console.log(artistSimilarArr);
-
-    var similarArtistsEl = document.getElementById('similar-artists');
-    similarArtistsEl.innerHTML = '';
-
-    for (var i = 0; i < artistSimilarArr.length; i++) {
-        var similarArtist = artistSimilarArr[i].name;
-        console.log('Similar Artist:', similarArtist);
-
-        var similarArtistTile = document.createElement('a');
-        similarArtistTile.setAttribute('class', 'artist-tile cell-2 pr-2 border-black flex-justify-center flex-align-center hover-effect');
-        similarArtistTile.setAttribute('id', similarArtist);
-        similarArtistTile.setAttribute('href', '#');
-        similarArtistTile.setAttribute('data-effect', 'hover-zoom-right');
-        similarArtistTile.style.textDecoration = 'none';
-
-        var similarArtistImg = document.createElement('img');
-        similarArtistImg.setAttribute('class', 'tile-img slide-front');
-
-        var similarArtistName = document.createElement('h5');
-        similarArtistName.setAttribute('class', 'artist-name slide-back text-center p-4');
-        similarArtistName.setAttribute('style', 'text-decoration:none !important; color: black; text-decoration-line: none;');
-        similarArtistName.textContent = similarArtist;
-        similarArtistName.setAttribute('id', similarArtist);
-
-        similarArtistTile.appendChild(similarArtistImg);
-        similarArtistTile.appendChild(similarArtistName);
-        similarArtistsEl.appendChild(similarArtistTile);
-
-        console.log('Similar Artist', similarArtistTile);
-        similarArtistTile.addEventListener('click', function(event) {
-            event.preventDefault();
-            var artistSearch = event.target.id;
-            var queryString = '?artist=' + encodeURIComponent(artistSearch);
-            history.pushState(null, '', queryString);
-
-            console.log('Similar Artist Search: ', artistSearch);
-            getParams();
-        });
-
-        getSimilarArtistImg(similarArtist, similarArtistImg, similarArtistTile);
+    if (artistBioEl) {
+      artistBioEl.innerHTML = '';
+      artistBioEl.appendChild(artistBioCard);
     }
-}
   
-  function getSimilarArtistImg(similarArtist, similarArtistImg) {
-    var deezerSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + encodeURIComponent(similarArtist);
+    var similarArtistsEl = document.getElementById('similar-artists');
+    if (similarArtistsEl) {
+      similarArtistsEl.innerHTML = '';
   
-    fetch(deezerSearchUrl, deezerOptions)
-        .then(function(response) {
-            if (!response.ok) {
-            throw new Error('Failed to fetch Similar Artist image');
-            }
-            return response.json();
+      var fetchSimilarArtistImages = artist.similarArtists.map(function (similarArtist) {
+        return getSimilarArtistImg(similarArtist, similarArtistsEl);
+      });
+  
+      Promise.all(fetchSimilarArtistImages)
+        .then(function () {
+          console.log('All similar artist images fetched');
+          retrieveTourDates(artist);
         })
-        .then(function(result) {
-            if (result.data && result.data.length > 0) {
-            console.log(similarArtist, result);
-            var deezerSimilarArtistMatch = result.data.find(function(artist) {
-                var decodedSearch = decodeURIComponent(similarArtist).toLowerCase();
-                var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase();
-                return decodedSearch === decodedArtistName;
-            });
-    
-            if (deezerSimilarArtistMatch) {
-                console.log('Similar Artist found:', deezerSimilarArtistMatch.artist.name);
-                var similarArtistImgSrc = deezerSimilarArtistMatch.artist.picture_medium;
-                similarArtistImg.setAttribute('src', similarArtistImgSrc);
-                similarArtistImg.setAttribute('id', similarArtist);
-
-            } else {
-                console.log('No artist found for', similarArtist);
-            }
-            } else {
-            console.log('No similar artist data found');
-            }
-        })
-        .catch(function(error) {
-            console.log('Similar artist error:', error);
+        .catch(function (error) {
+          console.log('Similar artist images error:', error);
         });
-}
-
-function getTourDates(deezerArtistName) {
-    var ticketmasterApiUrl = 'https://app.ticketmaster.com/discovery/v2/events?apikey=tNLADXtluSf6FmnNfmVlChS3d2UQXC6G&keyword=' + deezerArtistName + '&locale=*';
-    fetch(ticketmasterApiUrl)
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(result) {
-            console.log('ticketmaster', result);
-
-            if (result._embedded && result._embedded.events && result._embedded.events.length > 0) {
-                console.log('Ticketmaster Response: ', result);
-                var tourDates = result._embedded.events;
-                console.log(tourDates);
-                printTourDates(tourDates);
-            } else {
-                console.log('No tour dates found');
-                alert('Error: Tour dates not found');
-                var tourDatesEl = document.getElementById('tour-dates');
-                var noTourDates = document.createElement('p');
-                tourDatesEl.innerHTML = '';
-                noTourDates.textContent = 'No Tour Dates at this time.';
-                tourDatesEl.appendChild(noTourDates);
-            }
-        })
-        .catch(function(error) {
-            console.log('Error:', error);
-            alert('An error occurred while retrieving artist tour date information');
+    }
+  }
+  
+  function getSimilarArtistImg(similarArtist, similarArtistsEl) {
+    var deezerSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + encodeURIComponent(similarArtist.name);
+  
+    return fetch(deezerSearchUrl, deezerOptions)
+      .then(function(response) {
+        if (!response.ok) {
+          throw new Error('Failed to fetch Similar Artist image');
+        }
+        return response.json();
+      })
+      .then(function(result) {
+        if (result.data && result.data.length > 0) {
+          var deezerSimilarArtistMatch = result.data.find(function(artist) {
+            var decodedSearch = decodeURIComponent(similarArtist.name).toLowerCase();
+            var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase();
+            return decodedSearch === decodedArtistName;
+          });
+  
+          if (deezerSimilarArtistMatch) {
+            console.log('Similar Artist found:', deezerSimilarArtistMatch.artist.name);
+            var similarArtistImgSrc = deezerSimilarArtistMatch.artist.picture_medium;
+            createSimilarArtistElement(similarArtist, similarArtistImgSrc, similarArtistsEl);
+          } else {
+            console.log('No artist found for', similarArtist.name);
+            retrieveLastFmArtistImage(similarArtist, similarArtistsEl);
+          }
+        } else {
+          console.log('No similar artist data found');
+          retrieveLastFmArtistImage(similarArtist, similarArtistsEl);
+        }
+      })
+      .catch(function(error) {
+        console.log('Similar artist error:', error);
+        retrieveLastFmArtistImage(similarArtist, similarArtistsEl);
+      });
+  }
+  
+  function retrieveLastFmArtistImage(artist, similarArtistsEl) {
+    // Replace 'YOUR_LASTFM_API_KEY' with your actual Last.fm API key
+    var lastFmSearchUrl = `http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${encodeURIComponent(artist.name)}&api_key=${lastApiKey}&format=json`;
+  
+    return fetch(lastFmSearchUrl)
+      .then(function(response) {
+        if (!response.ok) {
+          throw new Error('Failed to fetch Last.fm Artist image');
+        }
+        return response.json();
+      })
+      .then(function(result) {
+        if (result.artist && result.artist.image && result.artist.image.length > 0) {
+          console.log('Last.fm Artist image found for', artist.name);
+          // Last.fm returns an array of images, we use the last image (largest size)
+          var lastFmArtistImage = result.artist.image[result.artist.image.length - 1]['#text'];
+          createSimilarArtistElement(artist, lastFmArtistImage, similarArtistsEl);
+        } else {
+          console.log('No Last.fm Artist image found for', artist.name);
+        }
+      })
+      .catch(function(error) {
+        console.log('Last.fm Artist image error:', error);
+      });
+  }
+  
+  function createSimilarArtistElement(similarArtist, imageSrc, similarArtistsEl) {
+    var similarArtistTile = document.createElement('a');
+    similarArtistTile.setAttribute('class', 'artist-tile cell-2 pr-2 border-black flex-justify-center flex-align-center hover-effect');
+    similarArtistTile.setAttribute('href', '#');
+    similarArtistTile.setAttribute('data-effect', 'hover-zoom-right');
+    similarArtistTile.style.textDecoration = 'none';
+  
+    var similarArtistImg = document.createElement('img');
+    similarArtistImg.setAttribute('class', 'tile-img slide-front');
+    similarArtistImg.setAttribute('src', imageSrc);
+    similarArtistImg.setAttribute('id', similarArtist.name);
+  
+    var similarArtistName = document.createElement('h5');
+    similarArtistName.setAttribute('class', 'artist-name text-center p-4');
+    similarArtistName.setAttribute('style', 'text-decoration:none !important; color: black; text-decoration-line: none;');
+    similarArtistName.textContent = similarArtist.name;
+    similarArtistName.setAttribute('id', similarArtist.name);
+  
+    similarArtistTile.appendChild(similarArtistImg);
+    similarArtistTile.appendChild(similarArtistName);
+    similarArtistsEl.appendChild(similarArtistTile);
+  
+    similarArtistTile.addEventListener('click', function(event) {
+      event.preventDefault();
+      var artistSearch = event.target.id;
+      var queryString = '?artist=' + encodeURIComponent(artistSearch);
+      history.pushState(null, '', queryString);
+  
+      console.log('Similar Artist Search:', artistSearch);
+      getParams();
     });
-}
+  }
 
-function printTourDates(tourDates) {
-    var tourDatesEl = document.getElementById('tour-dates');
+  function retrieveTourDates(artist) {
+    console.log('Calling retrieveTourDates');
+    var artistFound = Object.values(artist).some(function(value) {
+      return value !== null;
+    });
+  
+    if (!artistFound) {
+      var tourDatesEl = document.getElementById('tour-dates');
+      clearTourDates(tourDatesEl); // Call clearTourDates to clear previous tour dates
+      return Promise.resolve([]);
+    }
+  
+    var ticketmasterApiUrl =
+      'https://app.ticketmaster.com/discovery/v2/events?apikey=tNLADXtluSf6FmnNfmVlChS3d2UQXC6G&keyword=' +
+      encodeURIComponent(artist.name) +
+      '&locale=*';
+  
+    return fetch(ticketmasterApiUrl)
+      .then(function(response) {
+        if (!response.ok) {
+          throw new Error('Failed to fetch tour dates');
+        }
+        return response.json();
+      })
+      .then(function(result) {
+        console.log('Ticketmaster', result);
+  
+        var tourDatesEl = document.getElementById('tour-dates');
+        clearTourDates(tourDatesEl); // Call clearTourDates to clear previous tour dates
+  
+        if (
+          result._embedded &&
+          result._embedded.events &&
+          result._embedded.events.length > 0
+        ) {
+          console.log('Ticketmaster Response:', result);
+          var tourDates = result._embedded.events.filter(function(event) {
+            // Check if the artist name or one of the attractions' names exactly matches the searched artist
+            return (
+              event.name.toLowerCase() === artist.name.toLowerCase() ||
+              event._embedded.attractions.some(function(attraction) {
+                return attraction.name.toLowerCase() === artist.name.toLowerCase();
+              })
+            );
+          });
+          console.log(tourDates);
+          printTourDates(tourDates, tourDatesEl);
+          return tourDates;
+        } else {
+          return [];
+        }
+      })
+      .catch(function(error) {
+        console.log('Ticketmaster Error:', error);
+        return [];
+      });
+  }
+  
+  function clearTourDates(tourDatesEl) {
+    tourDatesEl.innerHTML = '';
+  }
+  
+  
+  
+  function printTourDates(tourDates, tourDatesEl) {
     tourDatesEl.innerHTML = '';
   
     if (tourDates.length === 0) {
-        var noTourDatesMessage = document.createElement('li');
-        noTourDatesMessage.textContent = 'No tour dates available.';
-        tourDatesEl.appendChild(noTourDatesMessage);
-        return;
+      var noTourDatesMessage = document.createElement('li');
+      noTourDatesMessage.textContent = 'No tour dates available.';
+      tourDatesEl.appendChild(noTourDatesMessage);
+      return;
     }
   
     tourDates.sort(function(a, b) {
-        var dateA = new Date(a.dates.start.dateTime);
-        var dateB = new Date(b.dates.start.dateTime);
-        return dateA - dateB;
+      var dateA = new Date(a.dates.start.dateTime);
+      var dateB = new Date(b.dates.start.dateTime);
+      return dateA - dateB;
     });
   
     for (var i = 0; i < tourDates.length; i++) {
-        var tourDateName = tourDates[i].name;
-        var tourDate = dayjs(tourDates[i].dates.start.dateTime).format('dddd, MMMM D, YYYY, h:mm A');
-        var tourDateLocation = {
-            tourDateVenue: tourDates[i]._embedded.venues[0].name,
-            tourDateCity: tourDates[i]._embedded.venues[0].city.name,
-            tourDateCountry: tourDates[i]._embedded.venues[0].country.name
-        };
-        var tourDateAttrArray = tourDates[i]._embedded.attractions;
-        var tourDateTicketUrl = tourDates[i].url;
-        console.log(tourDateName, tourDate, tourDateLocation, tourDateAttrArray, tourDateTicketUrl);
-    
-        var tourDateEl = document.createElement('li');
-        var tourDateNameEl = document.createElement('h2');
-        var tourDateLocEl = document.createElement('p');
-        var tourDateTimeEl = document.createElement('p');
-        var tourDateAttrEl = document.createElement('p');
-        var tourDateTicketBtn = document.createElement('button');
+      var tourDateName = tourDates[i].name;
+      var tourDate = dayjs(tourDates[i].dates.start.dateTime).format(
+        'dddd, MMMM D, YYYY, h:mm A'
+      );
+      var tourDateLocation = {
+        tourDateVenue: tourDates[i]._embedded.venues[0].name,
+        tourDateCity: tourDates[i]._embedded.venues[0].city.name,
+        tourDateCountry: tourDates[i]._embedded.venues[0].country.name,
+      };
+      var tourDateAttrArray = tourDates[i]._embedded.attractions;
+      var tourDateTicketUrl = tourDates[i].url;
+      console.log(
+        tourDateName,
+        tourDate,
+        tourDateLocation,
+        tourDateAttrArray,
+        tourDateTicketUrl
+      );
   
-        tourDateNameEl.textContent = tourDateName;
-        tourDateEl.setAttribute('class', 'pt-6');
-        tourDateNameEl.setAttribute('class', 'secondary');
-        tourDateLocEl.textContent = tourDateLocation.tourDateVenue + ', ' + tourDateLocation.tourDateCity + ', ' + tourDateLocation.tourDateCountry;
-        tourDateTimeEl.textContent = tourDate;
-        tourDateAttrEl.textContent = 'Attractions: ';
-        for (var j = 0; j < tourDateAttrArray.length; j++) {
-            tourDateAttrEl.textContent += tourDateAttrArray[j].name + ', ';
-        }
-        tourDateAttrEl.textContent = tourDateAttrEl.textContent.slice(0, -2);
-        tourDateTicketBtn.textContent = 'Get Tickets';
-        tourDateTicketBtn.setAttribute('class', 'place-right');
-    
-        (function(url) {
-            tourDateTicketBtn.addEventListener('click', function() {
-            window.open(url, '_blank');
-            });
-        })(tourDateTicketUrl);
+      var tourDateEl = document.createElement('li');
+      var tourDateNameEl = document.createElement('h2');
+      var tourDateLocEl = document.createElement('p');
+      var tourDateTimeEl = document.createElement('p');
+      var tourDateAttrEl = document.createElement('p');
+      var tourDateTicketBtn = document.createElement('button');
   
-        tourDateEl.setAttribute('class', 'tour-date-el border-bottom border-size-2 bd-gray pb-10');
-    
-        tourDateEl.appendChild(tourDateNameEl);
-        tourDateEl.appendChild(tourDateLocEl);
-        tourDateEl.appendChild(tourDateTimeEl);
-        tourDateEl.appendChild(tourDateAttrEl);
-        tourDateEl.appendChild(tourDateTicketBtn);
-    
-        tourDatesEl.appendChild(tourDateEl);
+      tourDateNameEl.textContent = tourDateName;
+      tourDateEl.setAttribute('class', 'pt-6');
+      tourDateNameEl.setAttribute('class', 'secondary');
+      tourDateLocEl.textContent =
+        tourDateLocation.tourDateVenue +
+        ', ' +
+        tourDateLocation.tourDateCity +
+        ', ' +
+        tourDateLocation.tourDateCountry;
+      tourDateTimeEl.textContent = tourDate;
+      tourDateAttrEl.textContent = 'Attractions: ';
+      for (var j = 0; j < tourDateAttrArray.length; j++) {
+        tourDateAttrEl.textContent += tourDateAttrArray[j].name + ', ';
+      }
+      tourDateAttrEl.textContent = tourDateAttrEl.textContent.slice(0, -2);
+      tourDateTicketBtn.textContent = 'Get Tickets';
+      tourDateTicketBtn.setAttribute('class', 'place-right');
+  
+      (function(url) {
+        tourDateTicketBtn.addEventListener('click', function() {
+          window.open(url, '_blank');
+        });
+      })(tourDateTicketUrl);
+  
+      tourDateEl.setAttribute(
+        'class',
+        'tour-date-el border-bottom border-size-2 bd-gray pb-10'
+      );
+  
+      tourDateEl.appendChild(tourDateNameEl);
+      tourDateEl.appendChild(tourDateLocEl);
+      tourDateEl.appendChild(tourDateTimeEl);
+      tourDateEl.appendChild(tourDateAttrEl);
+      tourDateEl.appendChild(tourDateTicketBtn);
+  
+      tourDatesEl.appendChild(tourDateEl);
     }
   }
-
-// function handleEventSearch(event) {
-//     event.preventDefault();
-
-//     var searchLocation = locationEl.value;
-//     var startDate = startDateEl.value;
-//     var endDate = endDateEl.value;
-
-//     if (!searchLocation || !startDate || !endDate) {
-//         console.error('You need a search input value!');
-//         alert('Please enter a Location, Start Date, and End Date!');
-//         return;
-//     }
-
-//     var queryString = './searchpage.html?searchlocation=' + encodeURIComponent(searchLocation) + '&startdate=' + encodeURIComponent(startDate) + '&enddate=' + encodeURIComponent(endDate);
-//     location.assign(queryString);
-//     locationEl.value = '';
-//     startDateEl.value = '';
-//     endDateEl.value = '';
-// }
 
 function handleArtistSearch(event) {
     event.preventDefault();  
@@ -444,18 +798,6 @@ function renderArtistHistory(artistSearches) {
     }
 }
 
-function saveEventHistory(searchLocation, startDate, endDate) {
-    var eventSearches = JSON.parse(localStorage.getItem('eventSearches')) || [];
-    var eventSearch = {
-        searchLocation: searchLocation,
-        startDate: startDate,
-        endDate: endDate
-    };
-    eventSearches.push(eventSearch);
-    localStorage.setItem('eventSearches', JSON.stringify(eventSearches));
-    console.log(eventSearches);
-}
-
 function saveArtistHistory(artistName, artistPicture) {
     var artistSearches =
         JSON.parse(localStorage.getItem('artistSearches')) || [];
@@ -498,16 +840,7 @@ function getParams() {
         var artistSearch = document.location.search.split('=').pop();
         console.log(artistSearch);
     
-        retrieveDeezerInfo(artistSearch);
-    } else if (document.location.search.includes('searchlocation')) {
-        var eventSearchArr = document.location.search.split('&');
-    
-        var searchLocation = eventSearchArr[0].split('=').pop();
-        var startDate = eventSearchArr[1].split('=').pop();
-        var endDate = eventSearchArr[2].split('=').pop();
-        console.log(eventSearchArr);
-    
-        saveEventHistory(searchLocation, startDate, endDate);
+        retrieveArtistInfo(artistSearch);
     } else {
         return;
     }
