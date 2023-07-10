@@ -11,7 +11,7 @@
 <body class="mx-auto">
     <div class="row">
         <div class="column side">
-          <section class="container" id="searchAside">
+          <section class="container mx-auto" id="searchAside">
                     <header>
                         <a href="./index.html"><img src="./logo2.png"></a>
                     </header> 
@@ -45,13 +45,13 @@
                         <span id="artist-header"></span>
                     </div>
                 </div>
-                <div class="playlist py-4">
-                    <iframe title="deezer-widget" width="60%" height="300" src='https://widget.deezer.com/widget/dark/artist/13/top_tracks' frameborder="0" allowtransparency="true" allow="encrypted-media; clipboard-write" id="artist-playlist"></iframe>
+                <div id="playlist" class="playlist py-4">
+                    <!-- <iframe title="deezer-widget" width="60%" height="300" src='https://widget.deezer.com/widget/dark/artist/13/top_tracks' frameborder="0" allowtransparency="true" allow="encrypted-media; clipboard-write" id="artist-playlist"></iframe> -->
                 </div>
                 <div class="results" id="artist-bio"></div>
                 <h2>Similar Artists</h2>
                 <div class="results row flex-justify-around" id="similar-artists"></div>
-                <h2>Tour Dates</h2>
+                <h2 id="tour-dates-title">Tour Dates</h2>
                 <div class="tour-date-wrapper">
                     <ul class="clear" id="tour-dates"></ul>
                 </div>
