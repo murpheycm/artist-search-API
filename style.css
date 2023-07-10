@@ -1,9 +1,9 @@
 body {
-    background-color: rgb(25, 25, 25);
+    background-color: rgb(65, 64, 64);
 }
 
 header {
-    background-color: rgb(25, 25, 25);
+    background-color: rgb(65, 64, 64);
     width: 100%;
     display: flex;
     top:0;
@@ -12,7 +12,7 @@ header {
 }
 
 .card{
-    background-color: rgb(25, 25, 25);
+    background-color: rgb(65, 64, 64);
     color: white;
     position: fixed;
     width: 20%;
@@ -34,7 +34,6 @@ form {
 .column.side {
     width: 25%;
     color: white;
-    background-color: rgb(25, 25, 25,);
     margin: 300px 0px 0px 0px;
     justify-content: center;
 }
@@ -45,7 +44,7 @@ form {
 
 
 .column.main {
-    width:70%;
+    width:75%;
     color: white;
 }
 
