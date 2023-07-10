@@ -1,0 +1,85 @@
+body, html {
+    height: 100%;
+    background-color: rgb(25, 25, 25);
+}
+
+header {
+    margin: 10px;
+    top: 8%;
+    text-align: center;
+}
+
+.hero-image {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url("https://w.forfun.com/fetch/b8/b8961521ef4b968c5c4ee19f7daefcee.jpeg");
+  height: 100%;
+  width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+.hero-text {
+  text-align: center;
+  position:relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(235, 233, 231);
+}
+
+#artist-search {
+    background-color: rgb(235, 233, 231);
+    color:black;
+    justify-content: center;
+    width: 45%;
+    /* position:relative; */
+    margin-top: 50px;
+}
+
+#artist-search-form {
+    padding: 3px;
+    margin: 10px;
+}
+
+#artist-search-form:hover {
+    padding: 3px;
+    margin: 10px;
+    background-color: rgb(173, 172, 172);
+}
+
+#event-search-btn {
+    background-color: rgb(188, 119, 24);
+    color: white;
+}
+
+#event-search-btn:hover {
+    background-color: rgb(1, 17, 31);
+    transform: scale(1.1);
+    color: white;
+}
+
+a:link {
+   color: white; 
+}
+
+a:link:hover {
+    color:white;
+}
+
+.tile-img {
+    border-radius: 50%;
+}
+
+.artist-name {
+    text-decoration: none;
+}
+
+.hover-effect {
+    transition: transform 0.5s;
+  }
+  
+.hover-effect:hover {
+    transform: scale(0.9);
+    filter: opacity(70%);
+}
