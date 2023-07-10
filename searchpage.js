@@ -66,49 +66,49 @@ function retrieveArtistInfo(artistSearch) {
 }
 
 function retrieveDeezerInfo(artistSearch) {
-    console.log('Calling retrieveDeezerInfo');
-    var deezerSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=artist:"' + artistSearch + '"';
-  
-    return fetch(deezerSearchUrl, deezerOptions)
-        .then(function(response) {
-            if (!response.ok) {
-                throw new Error('Failed to retrieve Deezer info');
-            }
-            return response.json();
-        })
-        .then(function(result) {
-            console.log(result);
-            if (result.data && result.data.length > 0) {  
-                var deezerMatch = result.data.find(function(artist) {
-                    var decodedSearch = decodeURIComponent(artistSearch).toLowerCase().replace(/[^\w\s-]/g, '');
-                    var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase().replace(/[^\w\s-]/g, '');
+  console.log('Calling retrieveDeezerInfo');
+  var deezerSearchUrl = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=' + encodeURIComponent(artistSearch);
 
-                    var searchWords = decodedSearch.split(/\s+/);
-                    var artistWords = decodedArtistName.split(/\s+/);
+  return fetch(deezerSearchUrl, deezerOptions)
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error('Failed to retrieve Deezer info');
+      }
+      return response.json();
+    })
+    .then(function(result) {
+      console.log(result);
+      if (result.data && result.data.length > 0) {
+        var deezerMatch = result.data.find(function(artist) {
+          var decodedSearch = decodeURIComponent(artistSearch).toLowerCase().replace(/[^\w\s-]/g, '');
+          var decodedArtistName = decodeURIComponent(artist.artist.name).toLowerCase().replace(/[^\w\s-]/g, '');
 
-                    return searchWords.every(function(word) {
-                        return artistWords.some(function(artistWord) {
-                            return artistWord.includes(word);
-                        });
-                    });
-                });
-  
-                if (deezerMatch) {
-                    console.log('Deezer Artist Match: ', deezerMatch.artist.name);
-                    return deezerMatch;
-                } else {
-                    console.log('Artist not found in Deezer');
-                    return null;
-                }
-            } else {
-                console.log('No data found in Deezer');
-                return null;
-            }
-        })
-        .catch(function(error) {
-            console.log('Error:', error);
-            return null;
+          var searchWords = decodedSearch.split(/\s+/);
+          var artistWords = decodedArtistName.split(/\s+/);
+
+          return searchWords.every(function(word) {
+            return artistWords.some(function(artistWord) {
+              return artistWord.includes(word);
+            });
+          });
         });
+
+        if (deezerMatch) {
+          console.log('Deezer Artist Match: ', deezerMatch.artist.name);
+          return deezerMatch;
+        } else {
+          console.log('Artist not found in Deezer');
+          return null;
+        }
+      } else {
+        console.log('No data found in Deezer');
+        return null;
+      }
+    })
+    .catch(function(error) {
+      console.log('Error:', error);
+      return null;
+    });
 }
 
 function retrieveLastFmInfo(artistSearch) {
@@ -294,7 +294,17 @@ function getArtistInfo(artistData) {
     };
 
     function getArtistName(artistData) {
-        return artistData.deezer?.name || artistData.lastFm?.name || artistData.spotify?.name || '';
+        var name = '';
+      
+        if (artistData.deezer && artistData.deezer.artist && artistData.deezer.artist.name) {
+          name = artistData.deezer.artist.name;
+        } else if (artistData.lastFm && artistData.lastFm.name) {
+          name = artistData.lastFm.name;
+        } else if (artistData.spotify && artistData.spotify.name) {
+          name = artistData.spotify.name;
+        }
+      
+        return name;
     }
 
     function getArtistId(artistData) {
@@ -302,12 +312,12 @@ function getArtistInfo(artistData) {
     }
 
     function getArtistPicture(artistData) {
-        if (artistData.deezer) {
-          return artistData.deezer.artist.picture_medium || '';
-        } else if (artistData.lastFm) {
-          return artistData.lastFm.artist.image?.pop()['#text'] || '';
-        } else if (artistData.spotify) {
-          return artistData.spotify.images[0]?.url || '';
+        if (artistData.deezer && artistData.deezer.artist && artistData.deezer.artist.picture_medium) {
+          return artistData.deezer.artist.picture_medium;
+        } else if (artistData.lastFm && artistData.lastFm.artist && artistData.lastFm.artist.image && artistData.lastFm.artist.image.length > 0) {
+          return artistData.lastFm.artist.image[0]['#text'];
+        } else if (artistData.spotify && artistData.spotify.images && artistData.spotify.images.length > 0) {
+          return artistData.spotify.images[0].url;
         } else {
           return '';
         }
@@ -328,15 +338,16 @@ function getArtistInfo(artistData) {
     function getSimilarArtists(artistData) {
         var similarArtists = [];
       
-        if (artistData.deezer?.similar?.artist) {
-            similarArtists = artistData.deezer.similar.artist;
-        } else if (artistData.lastFm?.similar?.artist) {
-            similarArtists = artistData.lastFm.similar.artist;
-        } else if (artistData.spotify?.similar?.artists?.items) {
-            similarArtists = artistData.spotify.similar.artists.items;
+        if (artistData.deezer && artistData.deezer.similar && artistData.deezer.similar.artist) {
+          similarArtists = artistData.deezer.similar.artist;
+        } else if (artistData.lastFm && artistData.lastFm.similar && artistData.lastFm.similar.artist) {
+          similarArtists = artistData.lastFm.similar.artist;
+        } else if (artistData.spotify && artistData.spotify.similar && artistData.spotify.similar.artists && artistData.spotify.similar.artists.items) {
+          similarArtists = artistData.spotify.similar.artists.items;
         }
+      
         return similarArtists;
-    }
+      }
 
     function getSpotifyLink(artistData) {
         return artistData.spotify?.external_urls?.spotify || '';
@@ -409,6 +420,7 @@ function retrieveItunesLink(artistName) {
   
     artistHeaderName.textContent = artist.name;
     artistHeaderPicture.setAttribute('src', artist.picture);
+    artistHeaderPicture.setAttribute('class', 'tile-img');
   
     artistHeaderCard.appendChild(artistHeaderPicture);
     artistHeaderCard.appendChild(artistHeaderName);
@@ -428,6 +440,7 @@ function retrieveItunesLink(artistName) {
     }
   
     var playlistEl = document.getElementById('playlist');
+    playlistEl.innerHTML = '';
   if (artist.deezerId) {
     var deezerWidgetContainer = document.createElement('iframe');
     deezerWidgetContainer.setAttribute('title', 'deezer-widget');
