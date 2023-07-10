@@ -113,7 +113,7 @@ function retrieveDeezerInfo(artistSearch) {
 
 function retrieveLastFmInfo(artistSearch) {
     console.log('Calling retrieveLastFmInfo');
-    var lastUrl = 'http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=' + artistSearch + '&api_key=' + lastApiKey + '&format=json';
+    var lastUrl = 'https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=' + artistSearch + '&api_key=' + lastApiKey + '&format=json';
 
     return fetch(lastUrl)
         .then(function(response) {
