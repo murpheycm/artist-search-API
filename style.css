@@ -1,1 +1,173 @@
+body {
+    background-color: rgb(25, 25, 25);
+}
 
+header {
+    background-color: rgb(25, 25, 25);
+    width: 100%;
+    display: flex;
+    top:0;
+    position:fixed;
+    z-index: 3;
+}
+
+.link-container {
+    display: flex;
+    justify-content:end;
+    align-items: center;
+}
+
+.logo {
+    margin:10px;
+    width:20px;
+}
+
+.card{
+    background-color: rgb(25, 25, 25);
+    color: white;
+    position: fixed;
+    width: 20%;
+    top: 10%;
+    left: 0;
+    padding: 4px 10px 10px 10px;
+    z-index: 2;
+}
+
+.form {
+    padding: 10px;
+}
+
+#sticky{
+    position:sticky;
+    z-index:1;
+    color: white;
+}
+
+.column.side {
+    width: 25%;
+    color: white;
+    background-color: rgb(25, 25, 25,);
+    margin: 300px 0px 0px 0px;
+    justify-content: center;
+}
+
+.column.side h2 {
+    margin: 0px 0px 0px 10px;
+}
+
+
+.column.main {
+    width:70%;
+    color: white;
+}
+
+h2 {
+    color: rgb(155, 206, 248);
+    padding: 5px;
+    text-align: left;
+} 
+
+#artist-search-btn {
+    padding: 5px;
+    margin: 10px 10px 10px 0px;
+    background-color:  rgb(245, 244, 242);
+    color: black;
+}
+
+#artist-search-btn:hover {
+    transform: scale(1.1);
+}
+
+#event-search-btn {
+    padding: 5px;
+    margin: 10px 10px 10px 0px;
+    background-color: rgb(188, 119, 24);
+    color: white;
+}
+
+#event-search-btn:hover {
+    background-color: rgb(1, 17, 31);
+    transform: scale(1.1)
+}
+
+#artist-history{
+    color: white;
+    margin: 20px;
+}
+
+#resultsSection{
+    margin: 100px 50px 0px 50px;
+}
+
+.header-picture {
+    max-height: 25%;
+    max-width: 25%;
+    border-radius: 50%;
+}
+
+.playlist {
+    position: relative;
+}
+
+#artist-bio{
+    margin: 10px 0px;
+    padding: 30px;
+    background-color: rgb(245, 244, 242);
+    color: black;
+    width:59%;
+}
+
+#artist-bio h2{
+    color: black;
+}
+
+a {
+    color: black;
+}
+
+a:hover {
+    color: rgb(167, 110, 3);
+}
+
+#similar-artists {
+    display: flex;
+    text-align: center;
+    color: white;  
+    width: 59%;
+}
+
+.artistTile {
+    margin-right: 10px;
+}
+
+.tile-img {
+    border-radius: 50%;
+}
+
+.tour-date-el {
+    list-style-type: none;
+}
+
+#tour-dates{
+    width:57%;
+}
+
+.hover-effect {
+    transition: transform 0.5s;
+  }
+  
+.hover-effect:hover {
+    transform: scale(0.9);
+    filter: opacity(70%);
+}
+
+.artist-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
+
+.artist-name {
+    text-decoration: none;
+    color: white !important;
+}
