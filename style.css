@@ -17,6 +17,7 @@ header {
     align-items: center;
 }
 
+/* Stying for logo and search bar */
 .logo {
     margin:10px;
     width:20px;
@@ -43,30 +44,6 @@ header {
     color: white;
 }
 
-.column.side {
-    width: 25%;
-    color: white;
-    background-color: rgb(25, 25, 25,);
-    margin: 300px 0px 0px 0px;
-    justify-content: center;
-}
-
-.column.side h2 {
-    margin: 0px 0px 0px 10px;
-}
-
-
-.column.main {
-    width:70%;
-    color: white;
-}
-
-h2 {
-    color: rgb(155, 206, 248);
-    padding: 5px;
-    text-align: left;
-} 
-
 #artist-search-btn {
     padding: 5px;
     margin: 10px 10px 10px 0px;
@@ -89,6 +66,32 @@ h2 {
     background-color: rgb(1, 17, 31);
     transform: scale(1.1)
 }
+
+/* Styling for page columns */
+.column.side {
+    width: 25%;
+    color: white;
+    background-color: rgb(25, 25, 25,);
+    margin: 300px 0px 0px 0px;
+    justify-content: center;
+}
+
+.column.side h2 {
+    margin: 0px 0px 0px 10px;
+}
+
+
+.column.main {
+    width:70%;
+    color: white;
+}
+
+/* Styling for the main column features */
+h2 {
+    color: rgb(155, 206, 248);
+    padding: 5px;
+    text-align: left;
+} 
 
 #artist-history{
     color: white;
@@ -129,6 +132,7 @@ a:hover {
     color: rgb(167, 110, 3);
 }
 
+/* Styling for similar artist tiles */
 #similar-artists {
     display: flex;
     text-align: center;
@@ -144,6 +148,7 @@ a:hover {
     border-radius: 50%;
 }
 
+/* Styling for tour dates section */
 .tour-date-el {
     list-style-type: none;
 }

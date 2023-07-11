@@ -9,6 +9,7 @@ header {
     text-align: center;
 }
 
+/* Styling for the hero-image (background image) */
 .hero-image {
   background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url("https://w.forfun.com/fetch/b8/b8961521ef4b968c5c4ee19f7daefcee.jpeg");
   height: 100vh;
@@ -16,7 +17,6 @@ header {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  /* position: relative; */
 }
 
 .hero-text {
@@ -28,12 +28,12 @@ header {
   color: rgb(235, 233, 231);
 }
 
+/* Styling for the search bar form */
 #artist-search {
     background-color: rgb(235, 233, 231);
     color:black;
     justify-content: center;
     width: 45%;
-    /* position:relative; */
     margin-top: 50px;
 }
 
@@ -60,6 +60,8 @@ header {
     color: white;
 }
 
+
+/* Styling for the similar artists tiles */
 a:link {
    color: white; 
 }

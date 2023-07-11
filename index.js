@@ -15,28 +15,7 @@ var deezerOptions = {
       'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
     }
 };
-// function handleEventSearch(event) {
-//     event.preventDefault();
-  
-    
-//       var searchLocation = locationEl.value;
-//       var startDate = startDateEl.value;
-//       var endDate = endDateEl.value;
-  
-    
-//         if (!location || !startDate || !endDate) {
-//           console.error('You need a search input value!');
-//           alert('Please enter a Location, Start Date, and End Date!')
-//           return;
-//         }
-      
-//         var queryString = './searchpage.html?searchlocation=' + searchLocation + '&startdate=' + startDate + '&enddate=' + endDate;
-      
-//       location.assign(queryString);
-//       locationEl.value = "";
-//       startDateEl.value = "";
-//       endDateEl.value = "";
-//   }
+
 
 function handleArtistSearch(event) {
     event.preventDefault();
@@ -51,11 +30,7 @@ function handleArtistSearch(event) {
 
     artistSearch = '';
     artistSearchEl.value = '';
-    // var queryString = './searchpage.html?artist=' + artistSearch;
-  
-    // location.assign(queryString);
-  
-    // artistSearchEl.value = "";
+
 }
   
 function retrieveDeezerInfo(artistSearch) {
@@ -230,12 +205,6 @@ function renderArtistMatch(artistMatches) {
   }
 }
 
-
-
-// if (eventSearchBtn) {
-//   eventSearchBtn.addEventListener('click', handleEventSearch);
-//   console.log(eventSearchBtn);
-// }
 
 if (artistSearchForm) {
     artistSearchForm.addEventListener('submit', handleArtistSearch);
