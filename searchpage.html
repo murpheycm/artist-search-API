@@ -10,6 +10,7 @@
 
 <body class="mx-auto">
     <div class="row">
+        <!-- Side column with search history and search bar and logo -->
         <div class="column side">
           <section class="container mx-auto" id="searchAside">
                     <header>
@@ -17,6 +18,7 @@
                     </header> 
                     <div class="container" id="artist-search">
                         <div class="card p-6">
+                            <!-- Search bar -->
                             <form id="artist-search-form">
                                 <label>Search Artists' Music, Tour Dates, and Similar Artists</label>
                                 <input type="text" placeholder="Search Artist" data-role="input" id="search-artist-input">
@@ -25,6 +27,7 @@
                         </div>
                     </div>
                 <div class="wrapper" id="sticky">
+                    <!-- Search History -->
                     <h2>Search History</h2>
                     <div id="artist-history" class="ml-3" style="color:white"></div>
                 </div>
@@ -33,15 +36,19 @@
         <div class="column main">
             <section class="container" id="resultsSection"></section>
                 <div id="resultsSummary">
+                    <!-- Main column artist header -->
                     <div class="nameplaylist">
                         <span id="artist-header"></span>
                     </div>
                 </div>
+                <!-- Deezer playlist -->
                 <div id="playlist" class="playlist py-4">
                 </div>
                 <div class="results" id="artist-bio"></div>
+                <!-- Similar artist section -->
                 <h2>Similar Artists</h2>
                 <div class="results row flex-justify-around" id="similar-artists"></div>
+                <!-- Tour dates section -->
                 <h2 id="tour-dates-title">Tour Dates</h2>
                 <div class="tour-date-wrapper">
                     <ul class="clear" id="tour-dates"></ul>
