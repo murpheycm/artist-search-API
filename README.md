@@ -27,25 +27,6 @@ THEN I receive those dates and links to buy those tickets and links for those ar
 
 ## https://murpheycm.github.io/artist-search-API/
 
-# IMG/Video
+![Alt text](./Capture.JPG)
+![Alt text](./Capture2.JPG)
 
-
-# Project Requirements
-Use a CSS framework other than Bootstrap.<br>
-Be deployed to GitHub Pages.<br>
-Be interactive (in other words, accept and respond to user input).<br>
-Use at least two server-side APIsLinks to an external site.<br>
-Use modals instead of alerts, confirms, or prompts.<br>
-Use client-side storage to store persistent data.<br>
-Be responsive.<br>
-Have a polished UI.<br>
-Have a clean repository that meets quality coding standards (file structure, naming conventions, best practices for class/id naming conventions, indentation, quality comments, and so on).<br>
-Have a quality README (including a unique name, description, technologies used, screenshot, and link to the deployed application).<br>
-
-# Presentation Requirements
-Elevator pitch: A one-minute description of your application.<br>
-Concept: What is your user story? What was your motivation for development?<br>
-Process: What were the technologies used? How were tasks and roles broken down and assigned? What challenges did you encounter? What were your successes?<br>
-Demo: Show your stuff!<br>
-Directions for future development.<br>
-Links to the deployed application and the GitHub repository.<br>
